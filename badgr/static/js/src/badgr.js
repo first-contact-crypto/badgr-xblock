@@ -2,7 +2,8 @@
 function BadgrXBlock(runtime, element, data) {
 
     var user = data.user
-    var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/?username=' + user
+    // var my_url = '/api/grades/v0/course_grade/' + data.course_id + '/users/?username=' + user
+    var my_url = '/api/grades/v1/courses/' + data.course_id + '/?username=' + user
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
@@ -47,7 +48,7 @@ function BadgrXBlock(runtime, element, data) {
                 url: noAwardUrl,
                 data:JSON.stringify({"name": "badgr"}),
                 success: function(json) {
-                    $('.badge-loader').hide();
+                    $('.badge-loader').hide();-
                     $('#lean_overlay').hide();
                     var $motivation = $('<p class="badgr-motivation">' 
                     + motivation_message + '</p>' );
