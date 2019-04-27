@@ -15,12 +15,12 @@ function BadgrXBlock(runtime, element, data) {
 
 
     function getGrades(data) {
-        var section_scores = data['section_scores'];
+        // var section_scores = data['section_scores'];
         // Check that the section name specified in Xblock exists in Grades report
         // if (section_scores.hasOwnProperty(section_title)) {
         //     var this_section = section_scores[String(section_title)];
         //     var section_title_id = '#' + section_title
-        if (pass_mark == "Pass") {
+        // if (pass_mark == "Pass") {
             $.ajax({
                 type: "POST",
                 url: handlerUrl,
@@ -41,22 +41,22 @@ function BadgrXBlock(runtime, element, data) {
                     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
                 }
             });
-        }
-        else {
-            $.ajax({
-            type: "POST",
-            url: noAwardUrl,
-            data:JSON.stringify({"name": "badgr"}),
-            success: function(json) {
-                $('.badge-loader').hide();-
-                $('#lean_overlay').hide();
-                var $motivation = $('<p class="badgr-motivation">' 
-                + motivation_message + '</p>' );
-                $('.badgr_block').append($motivation);
-                $('#check-for-badge').remove();
-                }
-            });
-        }
+        // }
+        // else {
+        //     $.ajax({
+        //     type: "POST",
+        //     url: noAwardUrl,
+        //     data:JSON.stringify({"name": "badgr"}),
+        //     success: function(json) {
+        //         $('.badge-loader').hide();-
+        //         $('#lean_overlay').hide();
+        //         var $motivation = $('<p class="badgr-motivation">' 
+        //         + motivation_message + '</p>' );
+        //         $('.badgr_block').append($motivation);
+        //         $('#check-for-badge').remove();
+        //         }
+        //     });
+        // }
         // } else {
         //     $('.badge-loader').hide();
         //     $('#lean_overlay').hide();
