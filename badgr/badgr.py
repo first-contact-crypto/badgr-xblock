@@ -217,7 +217,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            image_file_handle=ImageFile(os.path.join(os.curdir, 'xbadges_images/coffee.png')
+            image_file_handle=ImageFile(os.path.join(os.curdir, 'xbadges_images/coffee.png'))
         )
         
         # Award the badge
