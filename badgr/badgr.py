@@ -210,6 +210,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
+        file_name = pkg_resources.resource_filename(__name__, 'badge_images/coffee.png') 
+        ifh = ImageFile(file_name)
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
@@ -217,7 +219,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            image_file_handle=ImageFile(os.path.join(os.curdir, 'xbadges_images/coffee.png'))
+            image_file_handle=ifh
         )
         
         # Award the badge
