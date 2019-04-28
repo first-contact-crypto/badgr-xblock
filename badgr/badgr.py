@@ -212,9 +212,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         # file_name = pkg_resources.resource_filename(__name__, 'static/img/coffee.png') 
         # file_obj = open(file_name)
-        file_name = self.runtime.local_resource_url(self, 'public/img/coffee.png')
+        img_path = '/openedx/staticfiles/xblock/resources/badgr/public/img/coffee.png'
+        # file_name = self.runtime.local_resource_url(self, 'public/img/coffee.png')
         ifh = None
-        with open(file_name) as file_obj:
+        with open(img_path) as file_obj:
             ifh = ImageFile(file_obj)
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
