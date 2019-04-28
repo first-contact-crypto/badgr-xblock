@@ -219,7 +219,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            # image_file_handle=ImageFile(open('TEST_DATA_ROOT / 'badges' / name + '.png''))
             image_file_handle=ImageFile(ROOT_PATH + '/badges_images/coffee.png')
         )
         
