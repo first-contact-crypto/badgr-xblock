@@ -1,10 +1,12 @@
 """TO-DO: Write a description of what this XBlock is."""
 
+import os
 import pkg_resources
 import logging
 import requests
 from django.conf import settings
 from xblock.core import XBlock
+from django.core.files.images import ImageFile
 from django.contrib.auth.models import User
 from xblock.fields import Scope, Integer, String, Float, List, Boolean, ScopeIds
 from xblockutils.resources import ResourceLoader
@@ -193,7 +195,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         Get a list of issuers from badgr.proversity.org
         """
-        issuer_list = requests.get('{}/v1/issuer/issuers'.format(self.api_url),  headers={'Authorization': 'token {}'.format(self.api_token)})
+        issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),  headers={'Authorization': 'Bearer {}'.format(self.api_token)})
         return issuer_list.json()
 
     def resource_string(self, path):
@@ -208,13 +210,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
+        ROOT_PATH = os.path.dirname(__file__)
+
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
-            criteria=self.criteria
+            criteria=self.criteria,
+            # image_file_handle=ImageFile(open('TEST_DATA_ROOT / 'badges' / name + '.png''))
+            image_file_handle=ImageFile(ROOT_PATH + '/badges_images/coffee.png')
         )
         
         # Award the badge
