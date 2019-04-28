@@ -219,7 +219,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            image_file_handle=ImageFile(ROOT_PATH + '/badges_images/coffee.png')
+            image_file_handle=ImageFile('./:xbadges_images/coffee.png')
         )
         
         # Award the badge
