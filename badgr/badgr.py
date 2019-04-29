@@ -231,9 +231,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # Award the badge
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         logger.info(
-            "The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
+            "AWARDING THE BADGE.. The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
+        logger.info(
+            "AWARDING THE BADGE.. The slug is: {}".format(self.badge_slug)
+        )
         badge_class.award(badge_class, user)
-        badge_assertions = badge_service.assertions_for_user(user=user)
+        # badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
         self.received_award = True
         self.check_earned = True
