@@ -220,7 +220,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         ifh = ImageFile(file_obj)
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
-           slug=self.badge_slug, issuing_component=self.issuer_slug,
+            slug=self.badge_slug, issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
@@ -230,7 +230,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         
         # Award the badge
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
-        badge_class.award(user)
+        logger.info(
+            "The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
+        badge_class.award(badge_class, user)
         badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
         self.received_award = True
