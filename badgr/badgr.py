@@ -216,8 +216,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         img_path = '/openedx/data/uploads/badges/badges/honor.png'
         # file_name = self.runtime.local_resource_url(self, 'public/img/coffee.png')
         ifh = None
-        with open(img_path) as file_obj:
-            ifh = ImageFile(file_obj)
+        file_obj = open(img_path)
+        ifh = ImageFile(file_obj)
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
            slug=self.badge_slug, issuing_component=self.issuer_slug,
