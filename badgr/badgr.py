@@ -235,6 +235,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         logger.info(
             "AWARDING THE BADGE.. The slug is: {}".format(self.badge_slug)
         )
+        logger.info(
+            "AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
+                badge_class.badgr_server_slug)
+        )
         badge_class.award(badge_class, user)
         # badge_assertions = badge_service.assertions_for_user(user=user)
         slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
