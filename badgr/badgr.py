@@ -210,6 +210,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
+        logger.info("BADGR-XBLOCK.. In new_award_badge().. ")
         # file_name = pkg_resources.resource_filename(__name__, 'static/img/coffee.png') 
         # file_obj = open(file_name)
         # img_path = '/openedx/staticfiles/xblock/resources/badgr/public/img/coffee.png'
