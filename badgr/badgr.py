@@ -221,23 +221,27 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         ifh = ImageFile(file_obj)
         badge_service = self.runtime.service(self, 'badging')
         badge_class = badge_service.get_badge_class(
-            slug=self.badge_slug, issuing_component=self.issuer_slug,
+            slug=self.badge_slug, 
+            issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
             image_file_handle=ifh
         )
+
+        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the slug: {}".format(badge_class.slug))
         
         # Award the badge
         user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
         logger.info(
-            "AWARDING THE BADGE.. The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
+            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
         logger.info(
-            "AWARDING THE BADGE.. The slug is: {}".format(self.badge_slug)
+            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The slug is: {}".format(
+                self.badge_slug)
         )
         logger.info(
-            "AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
+            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
                 badge_class.badgr_server_slug)
         )
         badge_class.award(badge_class, user)
