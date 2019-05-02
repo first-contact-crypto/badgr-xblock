@@ -86,28 +86,28 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     pass_mark = Float(
         display_name='Pass mark',
-        default=80.0, 
+        default=80.0,
         scope=Scope.settings,
         help="Minium grade required to award this badge",
     )
 
     received_award = Boolean(
-        default = False, 
+        default=False,
         scope=Scope.user_state,
         help='Has the user received a badge for this sub-section'
     )
 
     check_earned = Boolean(
-        default = False, 
+        default=False,
         scope=Scope.user_state,
         help='Has the user check if they are eligible for a badge.'
     )
 
     assertion_url = String(
-        default = None, 
+        default=None,
         scope=Scope.user_state,
         help='The user'
-    ) 
+    )
 
     award_message = String(
         display_name='Award message',
@@ -118,32 +118,31 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     motivation_message = String(
         display_name='Motivational message',
-        default = u"Don't worry, you will have another opportunity to earn a badge.",
+        default=u"Don't worry, you will have another opportunity to earn a badge.",
         scope=Scope.settings,
         help='Message the user will see if they do not quailify for a badge'
     )
 
     button_text = String(
         display_name='Button text',
-        default = u"Click here to view your results.",
+        default=u"Click here to view your results.",
         scope=Scope.settings,
         help='Text appearing on button'
     )
 
     button_colour = String(
         display_name='Button colour',
-        default = u"#0075b4",
+        default=u"#0075b4",
         scope=Scope.settings,
         help='Colour appearing on button'
     )
 
     button_text_colour = String(
         display_name='Text button colour',
-        default = u"#ffffff",
+        default=u"#ffffff",
         scope=Scope.settings,
         help='Text colour appearing on button'
     )
-
 
     editable_fields = (
         'display_name',
@@ -151,7 +150,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         'criteria',
         'issuer_slug',
         'badge_slug',
-        'badge_name', 
+        'badge_name',
         'pass_mark',
         'section_title',
         'award_message',
@@ -162,7 +161,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     show_in_read_only_mode = True
- 
+
     @property
     def api_token(self):
         """
@@ -195,7 +194,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         Get a list of issuers from badgr.proversity.org
         """
-        issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),  headers={'Authorization': 'Bearer {}'.format(self.api_token)})
+        issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
+                                   headers={'Authorization': 'Bearer {}'.format(self.api_token)})
         return issuer_list.json()
 
     def resource_string(self, path):
@@ -211,7 +211,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         a badge.
         """
         logger.info("BADGR-XBLOCK.. In new_award_badge().. ")
-        # file_name = pkg_resources.resource_filename(__name__, 'static/img/coffee.png') 
+        # file_name = pkg_resources.resource_filename(__name__, 'static/img/coffee.png')
         # file_obj = open(file_name)
         # img_path = '/openedx/staticfiles/xblock/resources/badgr/public/img/coffee.png'
         img_path = '/openedx/data/uploads/badges/badges/honor.png'
@@ -222,11 +222,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         badge_service = self.runtime.service(self, 'badging')
 
-        logger.info("XBLOCK_BADGR: the type of the badge_service is: {}".format(type(badge_service)))
-
+        logger.info("XBLOCK_BADGR: the type of the badge_service is: {}".format(
+            type(badge_service)))
 
         badge_class = badge_service.get_badge_class(
-            slug=self.badge_slug, 
+            slug=self.badge_slug,
             issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
@@ -235,16 +235,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             image_file_handle=ifh
         )
 
-        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the client slug: {}".format(badge_class.slug))
-        
+        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the client slug: {}".format(
+            badge_class.slug))
+
         logger.info(
             "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
                 badge_class.badgr_server_slug)
         )
 
-        user = self.runtime.service(self, 'user')
-        
-        logger.info("BADGR_XBLOCK: calling badge_class.award() w/ user type of: {}".format(type(user)))
+        # user = self.runtime.service(self, 'user')
+        user = User.objects.get(username=self.current_user_key)
+
+        logger.info(
+            "BADGR_XBLOCK: calling badge_class.award() w/ user type of: {}".format(type(user)))
         badge_class.award(user)
 
         assertion = badge_class.assertions_for_user(user)[0]
@@ -261,7 +264,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             "criteria": self.criteria,
         }
         return badge_html_dict
-
 
     @XBlock.json_handler
     def no_award_received(self, data, suffix=''):
@@ -280,7 +282,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
 
-
     @XBlock.supports("multi_device")
     def student_view(self, context=None):
         """
@@ -288,7 +289,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         when viewing courses.
         """
         if self.runtime.get_real_user is not None:
-            user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+            user = self.runtime.get_real_user(
+                self.runtime.anonymous_student_id)
         else:
             user = User.objects.get(username=self.current_user_key)
 
@@ -303,7 +305,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'button_text_colour': self.button_text_colour
         }
 
-        frag = Fragment(loader.render_django_template("static/html/badgr.html", context).format(self=self))
+        frag = Fragment(loader.render_django_template(
+            "static/html/badgr.html", context).format(self=self))
         frag.add_css(self.resource_string("static/css/badgr.css"))
         frag.add_javascript(self.resource_string("static/js/src/badgr.js"))
         frag.initialize_js('BadgrXBlock', {
@@ -319,14 +322,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return frag
 
-
     def studio_view(self, context):
         """
         Render a form for editing this XBlock
         """
         frag = Fragment()
         context = {'fields': []}
-        
+
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
@@ -338,7 +340,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             field_info = self._make_field_info(field_name, field)
             if field_info is not None:
                 context["fields"].append(field_info)
-        frag.content = loader.render_django_template("static/html/badgr_edit.html", context)
+        frag.content = loader.render_django_template(
+            "static/html/badgr_edit.html", context)
         frag.add_javascript(loader.load_unicode("static/js/src/badgr_edit.js"))
         frag.initialize_js('StudioEditableXBlockMixin', {
             'badgrApiToken': self.api_token
