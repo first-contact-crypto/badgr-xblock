@@ -221,6 +221,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         ifh = ImageFile(file_obj)
 
         badge_service = self.runtime.service(self, 'badging')
+        
         user = self.runtime.service(self, 'user')
 
         badge_class = badge_service.get_badge_class(
