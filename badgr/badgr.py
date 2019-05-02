@@ -224,9 +224,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         logger.info("XBLOCK_BADGR: the type of the badge_service is: {}".format(type(badge_service)))
         
-        user = self.runtime.service(self, 'user')
+        
 
-        logger.info("XBLOCK_BADGR: the type of the user is: {}".format(
+        logger.info("XBLOCK_BADGR: the type of the user is: {}".format(         
             type(user)))
 
 
@@ -240,23 +240,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             image_file_handle=ifh
         )
 
-        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the slug: {}".format(badge_class.slug))
+        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the client slug: {}".format(badge_class.slug))
         
-        # Award the badge
-        # user = self.runtime.get_real_user(self.runtime.anonymous_student?_id)
-        logger.info(
-            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
-        logger.info(
-            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The client slug is: {}".format(
-                self.badge_slug)
-        )
         logger.info(
             "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
                 badge_class.badgr_server_slug)
         )
+
+        user = self.runtime.service(self, 'user')
+        
+        logger.info("BADGR_XBLOCK: calling badge_class.award() w/ user type of: {}".format(type(user)))
         badge_class.award(badge_class, user)
 
-        assertion = badge_service.assertions_for_user(user=user)[0]
+        assertion = badge_service.assertions_for_user(user)[0]
 
         self.received_award = True
         self.check_earned = True
