@@ -223,11 +223,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_service = self.runtime.service(self, 'badging')
 
         logger.info("XBLOCK_BADGR: the type of the badge_service is: {}".format(type(badge_service)))
-        
-        
-
-        logger.info("XBLOCK_BADGR: the type of the user is: {}".format(         
-            type(user)))
 
 
         badge_class = badge_service.get_badge_class(
