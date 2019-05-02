@@ -247,7 +247,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         logger.info("BADGR_XBLOCK: calling badge_class.award() w/ user type of: {}".format(type(user)))
         badge_class.award(user)
 
-        assertion = badge_service.assertions_for_user(user)[0]
+        assertion = badge_class.assertions_for_user(user)[0]
 
         self.received_award = True
         self.check_earned = True
