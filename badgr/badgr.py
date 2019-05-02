@@ -219,7 +219,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         ifh = None
         file_obj = open(img_path)
         ifh = ImageFile(file_obj)
+
         badge_service = self.runtime.service(self, 'badging')
+        user = self.runtime.service(self, 'user')
+
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug, 
             issuing_component=self.issuer_slug,
@@ -233,24 +236,29 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the slug: {}".format(badge_class.slug))
         
         # Award the badge
-        user = self.runtime.get_real_user(self.runtime.anonymous_student_id)
+        # user = self.runtime.get_real_user(self.runtime.anonymous_student?_id)
         logger.info(
             "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The user (self.runtime.get_real_user(self.runtime.anonymous_student_id) ) is: {}".format(user))
         logger.info(
-            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The slug is: {}".format(
+            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The client slug is: {}".format(
                 self.badge_slug)
         )
         logger.info(
             "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
                 badge_class.badgr_server_slug)
         )
-        badge_class.award(badge_class, user)
+        badge_class.award(badge_class, user) self.runtime.ge
         # badge_assertions = badge_service.assertions_for_user(user=user)
-        slug_assertions = badge_service.slug_assertion_for_user(user=user, slug=self.badge_slug)
+
+
+        assertion = badge_service.assertions_for_user(user=user)[0]
+
+
+
         self.received_award = True
         self.check_earned = True
-        self.image_url = slug_assertions[0]['image_url']
-        self.assertion_url = slug_assertions[0]['assertion_url']
+        self.image_url = assertion.image_url
+        self.assertion_url = assertion.assertion_url
 
         badge_html_dict = {
             "image_url": self.image_url,
