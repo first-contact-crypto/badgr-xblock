@@ -247,13 +247,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
                 badge_class.badgr_server_slug)
         )
-        badge_class.award(badge_class, user) self.runtime.ge
-        # badge_assertions = badge_service.assertions_for_user(user=user)
-
+        badge_class.award(badge_class, user)
 
         assertion = badge_service.assertions_for_user(user=user)[0]
-
-
 
         self.received_award = True
         self.check_earned = True
