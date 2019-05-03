@@ -230,9 +230,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
-            criteria=self.criteria,
-            image=self.image_url
+            criteria=self.criteria
         )
+
+        badge_class.image = self.image_url
 
         user = User.objects.get(username=self.current_user_key)
 
