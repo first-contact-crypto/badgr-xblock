@@ -64,16 +64,16 @@ function BadgrXBlock(runtime, element, data) {
         //         });
         //     }
         // } else {
-        $(".badge-loader").hide();
-        $("#lean_overlay").hide();
-        alert(
-            "The module named " +
-            '"' +
-            section_title +
-            '"' +
-            " does not exist in the Grades Report! Please check you have" +
-            " specified the correct module name for this badge."
-        );
+        // $(".badge-loader").hide();
+        // $("#lean_overlay").hide();
+        // alert(
+        //     "The module named " +
+        //     '"' +
+        //     section_title +
+        //     '"' +
+        //     " does not exist in the Grades Report! Please check you have" +
+        //     " specified the correct module name for this badge."
+        // );
         // }
     }
 
