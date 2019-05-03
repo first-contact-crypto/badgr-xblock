@@ -40,14 +40,14 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Issuer name",
         help="must be lower case unique name.",
         scope=Scope.settings,
-        default=u"proversity"
+        default=u"fcc"
     )
 
     badge_slug = String(
         display_name="Badge name",
         help="must be lower case unique name.",
         scope=Scope.settings,
-        default=u"test-badge"
+        default=u"epiphany"
     )
 
     badge_name = String(
