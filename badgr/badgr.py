@@ -210,20 +210,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        logger.info("BADGR-XBLOCK.. In new_award_badge().. ")
-        # file_name = pkg_resources.resource_filename(__name__, 'static/img/coffee.png')
-        # file_obj = open(file_name)
-        # img_path = '/openedx/staticfiles/xblock/resources/badgr/public/img/coffee.png'
-        img_path = '/openedx/data/uploads/badges/badges/honor.png'
-        # file_name = self.runtime.local_resource_url(self, 'public/img/coffee.png')
-        ifh = None
-        file_obj = open(img_path)
-        ifh = ImageFile(file_obj)
-
+        self.image_url = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
         badge_service = self.runtime.service(self, 'badging')
-
-        logger.info("XBLOCK_BADGR: the type of the badge_service is: {}".format(
-            type(badge_service)))
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
@@ -232,28 +220,15 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            image_file_handle=ifh
+            image=self.image_url
         )
 
-        logger.info("BADGR_XBLOCK: In new_award_badge.. just got badge_class, here is the client slug: {}".format(
-            badge_class.slug))
-
-        logger.info(
-            "BADGR_XBLOCK: In new_award_badge.. AWARDING THE BADGE.. The badge_class.badgr_server_slug is: {}".format(
-                badge_class.badgr_server_slug)
-        )
-
-        # user = self.runtime.service(self, 'user')
         user = User.objects.get(username=self.current_user_key)
 
-        logger.info(
-            "BADGR_XBLOCK: calling badge_class.award() w/ user type of: {}".format(type(user)))
         badge_class.award(user)
 
         assertions = badge_class.assertions_for_user(user)
         assertion = assertions[0]
-
-        
 
         self.received_award = True
         self.check_earned = True
@@ -368,3 +343,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 </vertical_demo>
              """),
         ]
+
+
+https: // lms.firstcontactcrypto.com/courses/course-v1: FirstContactCrypto+T101+2019_T1/courseware/aecf74ffcf884a7f948e8fce0044e908/e44725a489d64740bc7cad2e77fb276c/https//firstcontactcrypto.com/static/img/logo.png
