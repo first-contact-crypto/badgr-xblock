@@ -345,4 +345,3 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         ]
 
 
-https: // lms.firstcontactcrypto.com/courses/course-v1: FirstContactCrypto+T101+2019_T1/courseware/aecf74ffcf884a7f948e8fce0044e908/e44725a489d64740bc7cad2e77fb276c/https//firstcontactcrypto.com/static/img/logo.png
