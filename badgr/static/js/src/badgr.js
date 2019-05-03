@@ -24,7 +24,7 @@ function BadgrXBlock(runtime, element, data) {
             $.ajax({
                 type: "POST",
                 url: handlerUrl,
-                data:JSON.stringify({"name": "badgr"}),
+                data: JSON.stringify({"name": "badgr"}),
                 success: function(json) {
                         // Just reload the page, the correct html with the badge will be displayed
                         var onlyUrl = location.href.replace(location.search,'');
