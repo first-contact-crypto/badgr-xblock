@@ -2,7 +2,7 @@
 function BadgrXBlock(runtime, element, data) {
     var user = data.user;
     var my_url =
-        "/api/grades/v0/course_grade/" +
+        "/api/grades/v1/course_grade/" +
         data.course_id +
         "/users/?username=" +
         user;
@@ -31,21 +31,22 @@ function BadgrXBlock(runtime, element, data) {
                 var onlyUrl = location.href.replace(location.search, "");
                 window.location = onlyUrl;
                 return false;
-            },
-            error: function (xhr, errmsg, err) {
-                $(".badge-loader").hide();
-                $("#lean_overlay").hide();
-                $("#check-for-badge").remove();
-                $("#results").html(
-                    "<div>Oops! We have encountered an error, the badge " +
-                    '"' +
-                    badge_slug +
-                    '"' +
-                    " does not exist. Please contact your support administrator." +
-                    "</div>"
-                ); // add the error to the dom
-                console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             }
+            // },
+            // error: function (xhr, errmsg, err) {
+            //     $(".badge-loader").hide();
+            //     $("#lean_overlay").hide();
+            //     $("#check-for-badge").remove();
+            //     $("#results").html(
+            //         "<div>Oops! We have encountered an error, the badge " +
+            //         '"' +
+            //         badge_slug +
+            //         '"' +
+            //         " does not exist. Please contact your support administrator." +
+            //         "</div>"
+            //     ); // add the error to the dom
+            //     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+            // }
         });
             // } else {
         //         $.ajax({
