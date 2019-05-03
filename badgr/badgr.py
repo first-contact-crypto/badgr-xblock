@@ -212,9 +212,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
 
-        logger.info(
-            "BADGR_XBLOCK: In new_award_badge.. self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png') is: {}".format(img))
-
         badge_service = self.runtime.service(self, 'badging')
 
         badge_class = badge_service.get_badge_class(
