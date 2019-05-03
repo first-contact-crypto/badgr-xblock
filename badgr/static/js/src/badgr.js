@@ -82,10 +82,11 @@ function BadgrXBlock(runtime, element, data) {
         event.stopImmediatePropagation();
         $("#lean_overlay").show();
         $(".badge-loader").show();
-        $.ajax({
-            type: "GET",
-            url: my_url,
-            success: getGrades
-        });
+        // $.ajax({
+        //     type: "GET",
+        //     url: my_url,
+        //     success: getGrades
+        // });
+        getGrades(data)
     });
 }
