@@ -60,7 +60,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     image_url = String(
         help="The url for the badge image on Badgr server",
         scope=Scope.user_state,
-        default=""
+        default="https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
     )
 
     criteria = String(
@@ -210,7 +210,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        self.image_url = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
+        # self.image_url = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
+        
+        self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
+
+        pkg_resources.resource_string(__name__, 'static/img/epiphany-badge.png')
+
         badge_service = self.runtime.service(self, 'badging')
 
         badge_class = badge_service.get_badge_class(
