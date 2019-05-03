@@ -210,11 +210,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        # self.image_url = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
+        self.image_url = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
+
+        logger.info(
+            "BADGR_XLBOCK: In new_award_badge.. self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png') is: {}".format(self.image_url))
         
         self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
 
-        pkg_resources.resource_string(__name__, 'static/img/epiphany-badge.png')
+        img = self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png')
+
+        logger.info(
+            "BADGR_XBLOCK: In new_award_badge.. self.runtime.local_resource_url(self, 'public/img/epiphany-badge.png') is: {}".format(img))
 
         badge_service = self.runtime.service(self, 'badging')
 
