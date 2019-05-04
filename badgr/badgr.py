@@ -219,7 +219,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             slug=self.badge_slug,
             issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
-            display_name=self.badge_name
+            display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria
         )
