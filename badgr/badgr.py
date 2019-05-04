@@ -216,6 +216,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_service = self.runtime.service(self, 'badging')
 
         img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/epiphany-badge.png'))
+        img.name = 'public/img/epiphany-badge.png'
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
