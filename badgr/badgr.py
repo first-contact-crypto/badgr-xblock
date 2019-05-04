@@ -232,6 +232,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         self.image_url = badge_class.image.url
 
+        # Damn it man!
+
         user = User.objects.get(username=self.current_user_key)
 
         badge_class.award(user)
