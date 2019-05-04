@@ -248,7 +248,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             "image_url": self.image_url,
             "assertion_url": self.assertion_url,
             "description": self.description,
-            "criteria": self.criteria,
+            "criteria": self.criteria
         }
         return badge_html_dict
 
