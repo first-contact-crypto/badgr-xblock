@@ -222,7 +222,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            image_file_handle=self.image_url
+            img_url=self.image_url
         )
 
         user = User.objects.get(username=self.current_user_key)
