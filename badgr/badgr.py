@@ -216,13 +216,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_service = self.runtime.service(self, 'badging')
 
         image_str = self.resource_string('img/coffee.png')
+        img_url = self.runtime.local_resource_url(
+            self, 'public/img/epiphany-badge.png')
+
+        logger.info(
+            "BADGR_XBLOCK: In new_award_badge.. the img_url is: {}".format(img_url))
 
         imgfile = None
 
         with open('/tmp/image.png', 'wb') as f:
             imgfile = ImageFile(f)
             imgfile.write(image_str)
-
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
@@ -234,9 +238,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             image_file_handle=imgfile
         )
 
-
-
-        # self.image_url = badge_class.image.url
+        # self.image_url = badge_class.img_url
 
         # Damn it man!
 
@@ -360,5 +362,3 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 </vertical_demo>
              """),
         ]
-
-
