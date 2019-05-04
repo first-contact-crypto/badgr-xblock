@@ -215,22 +215,28 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         badge_service = self.runtime.service(self, 'badging')
 
+        image_str = self.resource_string('img/coffee.png')
+
+        imgfile = None
+
+        with open('/tmp/image.png', 'wb') as f:
+            imgfile = ImageFile(f)
+            imgfile.write(image_str)
+
+
         badge_class = badge_service.get_badge_class(
-            slug=self.badge_slug,
+            slug=self.badge_slug
             issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
             display_name=self.badge_name,
             description=self.description,
-            criteria=self.criteria
+            criteria=self.criteria,
+            image_file_handle=imgfile
         )
 
-        image_str = resource_string('img/coffee.png')
 
-        with open('/tmp/image.png', 'w') as f:
-            badge_class.image = ImageFile(f)
-            badge_class.image.write(image_str)
 
-        self.image_url = badge_class.image.url
+        # self.image_url = badge_class.image.url
 
         # Damn it man!
 
