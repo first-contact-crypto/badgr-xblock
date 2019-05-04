@@ -6,6 +6,7 @@ import logging
 import requests
 from django.conf import settings
 from xblock.core import XBlock
+from django.core.files import File
 from django.core.files.images import ImageFile
 from django.contrib.auth.models import User
 from xblock.fields import Scope, Integer, String, Float, List, Boolean, ScopeIds
@@ -210,20 +211,31 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
+        # self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
 
         badge_service = self.runtime.service(self, 'badging')
+
+        image_str = resource_string('img/coffee.png')
+
+        img_file_handle = None
+
+        which open('/tmp/image.png', 'w') as f:
+            img_file_handle = ImageFile(f)
+            img_file_handle.write(image_str)
+
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
             issuing_component=self.issuer_slug,
             course_id=self.runtime.course_id,
-            display_name=self.badge_name,
+            display_name=self.badge_name
             description=self.description,
             criteria=self.criteria
         )
 
-        badge_class.image = self.image_url
+        badge_class.image = img_file_handle
+        self.image_url = badge_class.image.url
+
         user = User.objects.get(username=self.current_user_key)
 
         badge_class.award(user)
