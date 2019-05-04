@@ -224,7 +224,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             display_name=self.badge_name,
             description=self.description,
             criteria=self.criteria,
-            imgage=img
+            image=img
         )
 
         user = User.objects.get(username=self.current_user_key)
