@@ -22,16 +22,16 @@ function BadgrXBlock(runtime, element, data) {
         //     var this_section = section_scores[String(section_title)];
         //     var section_title_id = "#" + section_title;
             // if (parseFloat(this_section) >= pass_mark) {
-        $.ajax({
-            type: "POST",
-            url: handlerUrl,
-            data: JSON.stringify({ name: "badgr" }),
-            success: function (json) {
-                // Just reload the page, the correct html with the badge will be displayed
-                var onlyUrl = location.href.replace(location.search, "");
-                window.location = onlyUrl;
-                return false;
-            }
+        // $.ajax({
+        //     type: "POST",
+        //     url: handlerUrl,
+        //     data: JSON.stringify({ name: "badgr" }),
+        //     success: function (json) {
+        //         // Just reload the page, the correct html with the badge will be displayed
+        //         var onlyUrl = location.href.replace(location.search, "");
+        //         window.location = onlyUrl;
+        //         return false;
+        //     }
             // },
             // error: function (xhr, errmsg, err) {
             //     $(".badge-loader").hide();
@@ -47,7 +47,7 @@ function BadgrXBlock(runtime, element, data) {
             //     ); // add the error to the dom
             //     console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
             // }
-        });
+        // });
             // } else {
         //         $.ajax({
         //             type: "POST",
@@ -88,6 +88,16 @@ function BadgrXBlock(runtime, element, data) {
         //     url: my_url,
         //     success: getGrades
         // });
-        getGrades(data)
+        $.ajax({
+          type: "POST",
+          url: handlerUrl,
+          data: JSON.stringify({ name: "badgr" }),
+          success: function(json) {
+            // Just reload the page, the correct html with the badge will be displayed
+            var onlyUrl = location.href.replace(location.search, "");
+            window.location = onlyUrl;
+            return false;
+          }
+        });
     });
 }
