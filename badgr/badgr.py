@@ -246,6 +246,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             "description": self.description,
             "criteria": self.criteria
         }
+
+        logger.info("BADGR_XBLOCK: In new_award_badge.. this is the html being returned: {}".format(badge_html_dict))
+
         return badge_html_dict
 
     @XBlock.json_handler
