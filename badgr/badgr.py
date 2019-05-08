@@ -163,19 +163,16 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     show_in_read_only_mode = True
 
+
     @property
     def api_token(self):
-        """
-        Returns the Badgr Server API token from Settings Service.
-        The API key should be set in both lms/cms env.json files inside XBLOCK_SETTINGS.
-        Example:
-            "XBLOCK_SETTINGS": {
-                "BadgrXBlock": {
-                    "BADGR_API_TOKEN": "YOUR API KEY GOES HERE"
-                }
-            },
-        """
-        return self.get_xblock_settings().get('BADGR_API_TOKEN', '')
+        fname = '/openedx/data/uploads/badgr/badgr.json'
+        at = None
+        with open(fname, 'r') as f:
+            info = json.load(f)
+            at = info['badgr_access_token']
+        return at
+
 
     @property
     def api_url(self):
