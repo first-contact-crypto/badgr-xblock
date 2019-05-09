@@ -4,11 +4,18 @@
     font-weight: bold;
 }
 
-.badge-image {
+/* .badge-image {
     display: block;
     margin: 0 auto;
     max-width: 100%;
     height: auto;
+} */
+
+.badge_image {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 5px;
+  width: 256px;
 }
 
 .badge-loader {
