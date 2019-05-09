@@ -56,7 +56,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Badge display name",
         help="Badge name that appears in Accomplishments tab",
         scope=Scope.settings,
-        default=u"Module 1 Badge"
+        default=u"Epiphany"
     )
 
     image_url = String(
@@ -69,7 +69,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Criteria",
         help="How does one earn this badge?",
         scope=Scope.settings,
-        default=u"Achieve a pass mark of 80% percent or more for course module 1"
+        default=u"Achieve a pass mark of 70% percent or more"
     )
 
     description = String(
@@ -88,7 +88,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     pass_mark = Float(
         display_name='Pass mark',
-        default=80.0,
+        default=70.0,
         scope=Scope.settings,
         help="Minium grade required to award this badge",
     )
