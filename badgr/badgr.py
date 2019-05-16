@@ -5,7 +5,6 @@ import json
 import pkg_resources
 import logging
 import requests
-from pathlib import Path 
 from django.conf import settings
 from xblock.core import XBlock
 from django.core.files import File
