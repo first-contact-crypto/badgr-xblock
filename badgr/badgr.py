@@ -5,6 +5,7 @@ import json
 import pkg_resources
 import logging
 import requests
+from pathlib import Path 
 from django.conf import settings
 from xblock.core import XBlock
 from django.core.files import File
@@ -146,6 +147,14 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Text colour appearing on button'
     )
 
+    # api_token = String(
+    #     display_name='API token',
+    #     default=u"",
+    #     scope=Scope.settings,
+    #     help="blah"
+    # )
+
+
     editable_fields = (
         'display_name',
         'description',
@@ -163,16 +172,22 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     show_in_read_only_mode = True
+    # apitoken = None
 
 
-    @property
-    def api_token(self):
-        fname = '/openedx/data/uploads/badgr/badgr.json'
-        at = None
-        with open(fname, 'r') as f:
-            info = json.load(f)
-            at = info['badgr_access_token']
-        return at
+    # @property
+    # def api_token(self):
+    #     # if self.apitoken:
+    #     #     return self.apitoken
+    #     # fpath = '/openedx/data/uploads/badgr/badgr.json'
+    #     # f = Path(fpath)
+    #     # if not f.is_file():
+    #     #     logger.warning("BADGR_XBLOCK: In api_token.. The fpath: {}, DOES NOT EXIT!".format(fpath))
+    #     # at = None
+    #     # with open(fpath, 'r') as f:
+    #     #     info = json.load(f)
+    #     #     at = info['badgr_access_token']
+    #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
 
     @property
@@ -189,13 +204,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
-    def get_list_of_issuers(self):
-        """
-        Get a list of issuers from badgr.proversity.org
-        """
-        issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
-                                   headers={'Authorization': 'Bearer {}'.format(self.api_token)})
-        return issuer_list.json()
+    # def get_list_of_issuers(self):
+    #     """
+    #     Get a list of issuers from badgr.proversity.org
+    #     """
+    #     issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
+    #                                headers={'Authorization': 'Bearer {}'.format(self.api_token)})
+    #     return issuer_list.json()
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
@@ -300,7 +315,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'award_message': self.award_message,
             'motivation_message': self.motivation_message,
             'course_id':  str(self.runtime.course_id),
-            'badgrApiToken': self.api_token,
+            'badgrApiToken': "not_needed_??",
             'badge_slug': self.badge_slug
         })
 
@@ -328,7 +343,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             "static/html/badgr_edit.html", context)
         frag.add_javascript(loader.load_unicode("static/js/src/badgr_edit.js"))
         frag.initialize_js('StudioEditableXBlockMixin', {
-            'badgrApiToken': self.api_token
+            'badgrApiToken': "not_needed_??"
         })
         return frag
 
