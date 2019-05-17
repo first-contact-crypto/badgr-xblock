@@ -15,6 +15,32 @@ function BadgrXBlock(runtime, element, data) {
     var noAwardUrl = runtime.handlerUrl(element, "no_award_received");
     var onlyUrl = location.href.replace(location.search, "");
 
+    function scrollPage(target) {
+        if (target.length) {
+        // Only prevent default if animation is actually gonna happen
+        event.preventDefault();
+        $("html, body").animate(
+            {
+            scrollTop: target.offset().top
+            },
+            1000,
+            function() {
+            // Callback after animation
+            // Must change focus!
+            var $target = $(target);
+            $target.focus();
+            if ($target.is(":focus")) {
+                // Checking if the target was focused
+                return false;
+            } else {
+                $target.attr("tabindex", "-1"); // Adding tabindex for elements not focusable
+                $target.focus(); // Set focus again
+            }
+            }
+        );
+        }
+    }
+
     function getGrades(data) {
         // var section_scores = data["section_scores"];
         // // Check that the section name specified in Xblock exists in Grades report
@@ -94,13 +120,17 @@ function BadgrXBlock(runtime, element, data) {
           data: JSON.stringify({ name: "badgr" }),
           success: function(json) {
             // Just reload the page, the correct html with the badge will be displayed
-            var onlyUrl = location.href.replace(location.search, "");
+            var onlyUrl = location.href.replace(location.search, "#" + section_title);
             window.location = onlyUrl;
+            // Scroll to a certain element
+            // document.querySelector("#" + section_title).scrollIntoView({behavior:"smooth"});
             return false;
-          }
+            }
         });
     });
 }
+
+
 
 // EDITED BY MY 
 // https://css-tricks.com/snippets/jquery/smooth-scrolling/

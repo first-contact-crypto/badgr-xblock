@@ -37,7 +37,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default=u"Badgr"
+        default=u"Badgr OpenBadges"
     )
 
     issuer_slug = String(
