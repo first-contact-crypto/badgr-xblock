@@ -37,7 +37,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
         scope=Scope.settings,
-        default=u"Badgr OpenBadges"
+        default=u"Step 3. Earn an Epiphany point for the correct answer"
     )
 
     issuer_slug = String(
@@ -78,7 +78,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         display_name="Description",
         help="What is this badge",
         scope=Scope.settings,
-        default=u"A Shiny badge, given to exceptional students"
+        default=u"An Epiphany Point, redeem for prizes."
     )
 
     section_title = String(
@@ -115,21 +115,21 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     award_message = String(
         display_name='Award message',
-        default=u'Well done you are an all star!',
+        default=u'Well done, Cryptonaut! Proceed to the next mission.',
         scope=Scope.settings,
         help='Message the user will see upon receiving a badge',
     )
 
     motivation_message = String(
         display_name='Motivational message',
-        default=u"Don't worry, you will have another opportunity to earn a badge.",
+        default=u"Don't worry, try again.",
         scope=Scope.settings,
         help='Message the user will see if they do not quailify for a badge'
     )
 
     button_text = String(
         display_name='Button text',
-        default=u"Click here to view your results.",
+        default=u"Click here to claim your reward.",
         scope=Scope.settings,
         help='Text appearing on button'
     )
@@ -229,8 +229,15 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         badge_service = self.runtime.service(self, 'badging')
 
-        img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/epiphany-badge.png'))
-        img.name = 'public/img/epiphany-badge.png'
+        img = None
+        if self.badge_slug == 'course':
+            img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/course-badge.png'))
+            img.name = 'public/img/course-badge.png'
+        else:
+            img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/epiphany-badge.png'))
+            img.name = 'public/img/epiphany-badge.png'
+
+
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
