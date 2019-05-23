@@ -42,27 +42,27 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     issuer_slug = String(
         display_name="Issuer name",
-        help="must be lower case unique name.",
+        help="DO NOT CHANGE",
         scope=Scope.settings,
         default=u"fcc"
     )
 
     badge_slug = String(
         display_name="Badge name",
-        help="must be lower case unique name.",
+        help="must be lower-case.. and ONLY 'epiphany' or 'course'.",
         scope=Scope.settings,
         default=u"epiphany"
     )
 
     badge_name = String(
         display_name="Badge display name",
-        help="Badge name that appears in Accomplishments tab",
+        help="Badge name that appears in Accomplishments tab.. either 'Epiphany' or 'Course'",
         scope=Scope.settings,
         default=u"Epiphany"
     )
 
     image_url = String(
-        help="The url for the badge image on Badgr server",
+        help="DO NOT CHANGE",
         scope=Scope.user_state,
         default="https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
     )
@@ -83,7 +83,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     section_title = String(
         display_name="Section title",
-        help="See the display name of this section",
+        help="DO NOT CHANGE",
         scope=Scope.settings,
         default=u"Section"
     )
