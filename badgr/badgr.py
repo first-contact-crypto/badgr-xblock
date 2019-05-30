@@ -233,7 +233,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
-            issuing_component=self.issuer_slug
+            issuing_component=self.issuer_slug,
+            display_name = self.display_name,
+            description = self.description,
+            criteria = self.criteria,
+            course_id = self.course_id
         )
 
         user = User.objects.get(username=self.current_user_key)
