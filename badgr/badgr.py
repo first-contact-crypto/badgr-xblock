@@ -20,6 +20,8 @@ from xblockutils.settings import XBlockWithSettingsMixin
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
+ISSUER_ID = 'rGy5MNWtQgSs1vfnLyPlmg'
+
 
 @XBlock.needs('settings')
 @XBlock.wants('badging')
@@ -172,6 +174,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         'button_text_colour'
     )
 
+
     show_in_read_only_mode = True
     # apitoken = None
 
@@ -225,28 +228,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        # self.image_url = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_71b6cc36-d931-446e-909b-ec6465a5cbec.svg"
 
         badge_service = self.runtime.service(self, 'badging')
 
-        img = None
-        if self.badge_slug == 'course':
-            img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/course-badge.png'))
-            img.name = 'public/img/course-badge.png'
-        else:
-            img = ImageFile(pkg_resources.resource_stream(__name__, 'public/img/epiphany-badge.png'))
-            img.name = 'public/img/epiphany-badge.png'
-
-
-
         badge_class = badge_service.get_badge_class(
             slug=self.badge_slug,
-            issuing_component=self.issuer_slug,
-            course_id=self.runtime.course_id,
-            display_name=self.badge_name,
-            description=self.description,
-            criteria=self.criteria,
-            image=img
+            issuing_component=self.issuer_slug
         )
 
         user = User.objects.get(username=self.current_user_key)
