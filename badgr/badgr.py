@@ -245,12 +245,15 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         badge_class.award(user)
 
         assertions = badge_class.assertions_for_user(user)
-        assertion = assertions[0]
+        for a in assertions:
+            if self.slug == 'course':
+                self.image_url = a.image_url
+            else:
+                self.image_url = a.image_url
 
         self.received_award = True
         self.check_earned = True
-        # self.image_url = assertion.image_url
-        self.assertion_url = assertion.assertion_url
+        self.assertion_url = assertions[0].assertion_url
 
         badge_html_dict = {
             "image_url": self.image_url,
