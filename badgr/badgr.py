@@ -246,7 +246,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         assertions = badge_class.assertions_for_user(user)
         for a in assertions:
-            if self.slug == 'course':
+            if self.badge_slug == 'course':
                 self.image_url = a.image_url
             else:
                 self.image_url = a.image_url
