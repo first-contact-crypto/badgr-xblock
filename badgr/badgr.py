@@ -228,6 +228,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
+        e_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_efc20af1-7d43-4d1e-877e-447244ea3fd3.png"
+        c_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_63237c1a-3f3d-40b7-9e48-085658d2799f.png"
+
+        bslug_course = "2gnNK3RZSlOutOrVeQlD_A"
+        bslug_epiph = "V_MaSinhQJeKGOtZz6tDAQ"
+        bslug = ""
+
+        if self.badge_slug == 'course':
+            self.image_url = c_image
+            bslug = bslug_course
+        else:
+            self.image_url = e_image
+            bslug = bslug_epiph
 
         badge_service = self.runtime.service(self, 'badging')
 
@@ -238,22 +251,24 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             description = self.description,
             criteria = self.criteria,
             course_id = self.course_id
+            badgr_server_slug = bslug
+            image_url = self.image_url
         )
 
         user = User.objects.get(username=self.current_user_key)
 
         badge_class.award(user)
 
-        assertions = badge_class.assertions_for_user(user)
-        for a in assertions:
-            if self.badge_slug == 'course':
-                self.image_url = a.image_url
-            else:
-                self.image_url = a.image_url
+        # assertions = badge_class.assertions_for_user(user)
+
+        if self.badge_slug == 'course':
+            self.image_url = c_image
+        else:
+            self.image_url = e_image
 
         self.received_award = True
         self.check_earned = True
-        self.assertion_url = assertions[0].assertion_url
+        self.assertion_url = "https://firstcontactactcrypto.com/assertions.html"
 
         badge_html_dict = {
             "image_url": self.image_url,
