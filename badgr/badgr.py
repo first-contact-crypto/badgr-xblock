@@ -20,7 +20,7 @@ from xblockutils.settings import XBlockWithSettingsMixin
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
-ISSUER_ID = 'rGy5MNWtQgSs1vfnLyPlmg'
+ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
 
 @XBlock.needs('settings')
@@ -231,8 +231,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         e_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_efc20af1-7d43-4d1e-877e-447244ea3fd3.png"
         c_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_63237c1a-3f3d-40b7-9e48-085658d2799f.png"
 
-        bslug_course = "2gnNK3RZSlOutOrVeQlD_A"
-        bslug_epiph = "V_MaSinhQJeKGOtZz6tDAQ"
+        bslug_course = "RBNmTgTUTQC4o_0-yDIA4g"
+        bslug_epiph = "CM-sak0wQuCty2BfSEle3A"
         bslug = ""
 
         if self.badge_slug == 'course':
