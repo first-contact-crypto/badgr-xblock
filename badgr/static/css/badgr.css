@@ -43,7 +43,7 @@
 
 .btn-default-badgr {
     /* background: #0075b4; */
-    border-color: #00ff00 !important;
+    border-color: #00ff00;
     color: #00ff00 !important;
     transition: all 0.3s;
 }
@@ -56,6 +56,7 @@
 }
 
 .btn-badgr {
+    border-color: #00ff00;
     display: inline;
     width: auto;
     padding: 10px 30px;;
@@ -74,14 +75,12 @@
 }
 
 
-
 .action-badgr {
-
     width: 100%;
     text-align: center;
     margin: 15px auto;
-
 }
+
 
 #lean_overlay > .grid {
     display: -webkit-box;
