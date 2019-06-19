@@ -42,14 +42,15 @@
 }
 
 .btn-default-badgr {
-    background: #0075b4;
-    color: #fff;
+    /* background: #0075b4; */
+    border-color: #00ff00;
+    color: #00ff00;
     transition: all 0.3s;
 }
 
 .btn-default-badgr:hover, .btn-default:focus {
-    background: #009ade;
-    color: #fff;
+    background: #222;
+    color: #00ff00;
     box-shadow: none;
 }
 
@@ -70,6 +71,8 @@
     border: none;
     border-radius: 4px;
 }
+
+
 
 .action-badgr {
 
