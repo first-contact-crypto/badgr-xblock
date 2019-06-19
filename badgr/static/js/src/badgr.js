@@ -1,11 +1,12 @@
 /* Javascript for BadgrXBlock. */
 function BadgrXBlock(runtime, element, data) {
   var user = data.user;
-  var my_url =
-    "/api/grades/v1/course_grade/" +
-    data.course_id +
-    "/users/?username=" +
-    user;
+  // var my_url =
+  //   "/api/grades/v1/course_grade/" +
+  //   data.course_id +
+  //   "/users/?username=" +
+  //   user;
+  var my_url = "https://learn.firstcontactcrypto.com/courses/" + data.course_id + "?" + "username=" + user
   var section_title = data.section_title;
   var pass_mark = data.pass_mark;
   var award_message = data.award_message;
