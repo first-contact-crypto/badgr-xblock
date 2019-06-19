@@ -2,7 +2,7 @@
 function BadgrXBlock(runtime, element, data) {
   var user = data.user;
   var my_url =
-    "/api/grades/v01/course_grade/" +
+    "/api/grades/v1/course_grade/" +
     data.course_id +
     "/users/?username=" +
     user;
