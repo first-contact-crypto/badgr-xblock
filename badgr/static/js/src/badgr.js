@@ -86,7 +86,7 @@ function BadgrXBlock(runtime, element, data) {
     $.ajax({
       type: "GET",
       url: my_url,
-      success: getGrades
+      success: getGrades(data)
     });
   });
 }
