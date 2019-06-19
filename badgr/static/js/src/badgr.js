@@ -87,6 +87,7 @@ function BadgrXBlock(runtime, element, data) {
     $.ajax({
       type: "GET",
       url: my_url,
+      console.log("INFO ajax SUCCESS.. calling getGrades(data)")
       success: getGrades(data)
     });
   });
