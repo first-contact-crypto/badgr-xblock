@@ -17,6 +17,7 @@ function BadgrXBlock(runtime, element, data) {
   var onlyUrl = location.href.replace(location.search, "");
 
   function getGrades(data) {
+    console.log("INFO: In getGrades.. data is " + JSON.stringify(data)
     var section_scores = data["section_scores"];
     // Check that the section name specified in Xblock exists in Grades report
     if (section_scores.hasOwnProperty(section_title)) {
