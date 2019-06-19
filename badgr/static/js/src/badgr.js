@@ -19,6 +19,52 @@ function BadgrXBlock(runtime, element, data) {
   function getGrades(data) {
     console.log("INFO In getGrades..")
     console.log("INFO: In getGrades.. data is " + JSON.stringify(data.json())
+
+    if (data.success === "correct") {
+      $.ajax({
+        type: "POST",
+        url: handlerUrl,
+        data: JSON.stringify({ name: "badgr" }),
+        success: function(json) {
+          // Just reload the page, the correct html with the badge will be displayed
+          var onlyUrl = location.href.replace(location.search, "");
+          window.location = onlyUrl;
+          return false;
+        },
+        error: function(xhr, errmsg, err) {
+          $(".badge-loader").hide();
+          $("#lean_overlay").hide();
+          $("#check-for-badge").remove();
+          $("#results").html(
+            "<div>Oops! We have encountered an error, the badge " +
+              '"' +
+              badge_slug +
+              '"' +
+              " does not exist. Please contact your support administrator." +
+              "</div>"
+          ); // add the error to the dom
+          console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+        }
+      });
+    } else {
+      $.ajax({
+        type: "POST",
+        url: noAwardUrl,
+        data: JSON.stringify({ name: "badgr" }),
+        success: function(json) {
+          $(".badge-loader").hide();
+          $("#lean_overlay").hide();
+          var $motivation = $(
+            '<p class="badgr-motivation">' + motivation_message + "</p>"
+          );
+          $(".badgr_block").append($motivation);
+          $("#check-for-badge").remove();
+        }
+      });
+    }
+
+
+
     var section_scores = data["section_scores"];
     // Check that the section name specified in Xblock exists in Grades report
     if (section_scores.hasOwnProperty(section_title)) {
