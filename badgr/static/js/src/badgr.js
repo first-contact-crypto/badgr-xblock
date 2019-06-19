@@ -17,6 +17,7 @@ function BadgrXBlock(runtime, element, data) {
   var onlyUrl = location.href.replace(location.search, "");
 
   function getGrades(data) {
+    console.log("INFO In getGrades..")
     console.log("INFO: In getGrades.. data is " + JSON.stringify(data.json())
     var section_scores = data["section_scores"];
     // Check that the section name specified in Xblock exists in Grades report
@@ -80,6 +81,8 @@ function BadgrXBlock(runtime, element, data) {
   }
 
   $("#check-for-badge").click(function(event) {
+    console.log("INFO in check-for-badge().click().. calling getGrades(data)")
+
     event.preventDefault();
     event.stopImmediatePropagation();
     $("#lean_overlay").show();
@@ -87,8 +90,9 @@ function BadgrXBlock(runtime, element, data) {
     $.ajax({
       type: "GET",
       url: my_url,
-      console.log("INFO ajax SUCCESS.. calling getGrades(data)")
-      success: getGrades(data)
+      success: function (data) {
+        console.log("INFO in check-for-badge().click().. calling getGrades(data)")
+        getGrades(data)
     });
   });
 }
