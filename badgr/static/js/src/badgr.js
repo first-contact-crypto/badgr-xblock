@@ -75,15 +75,16 @@ function BadgrXBlock(runtime, element, data) {
     $("#mission-ctl-1").text("WTF 1")
     alert("INFO in check-for-badge().click().. calling getGrades(data)")
 
-    $("#lean_overlay").show();
-    $(".badge-loader").show();
+    // $("#lean_overlay").show();
+    // $(".badge-loader").show();
 
 
     $.ajax({
       type: "GET",
       url: my_url,
+      async: "false",
       success: function (data) {
-        $("#mission-ctl-2").html(data)
+        $("#mission-ctl-2").text("THE DATA TYPE: " + typeof(data))
         alert("INFO in check-for-badge().click().. calling getGrades(data)")
         getGrades(data)
       }
