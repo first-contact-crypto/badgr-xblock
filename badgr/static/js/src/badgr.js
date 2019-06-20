@@ -17,7 +17,7 @@ function BadgrXBlock(runtime, element, data) {
   var onlyUrl = location.href.replace(location.search, "");
 
   function getGrades(data) {
-    $("mission-ctl-2").html("<h3>WTF 3</h3>")
+    $("mission-ctl-2").text("WTF 3")
     console.log("INFO In getGrades..")
     alert("INFO: In getGrades.. data is " + JSON.stringify(data.json())
 
@@ -28,7 +28,7 @@ function BadgrXBlock(runtime, element, data) {
         data: JSON.stringify({ name: "badgr" }),
         success: function(data) {
           // Just reload the page, the correct html with the badge will be displayed
-          $("mission-ctl-3").html("<h3>WTF 4</h3>")
+          $("mission-ctl-4").text("WTF 4")
           var onlyUrl = location.href.replace(location.search, "");
           window.location = onlyUrl;
           return true;
@@ -70,14 +70,16 @@ function BadgrXBlock(runtime, element, data) {
 
 
   $("#check-for-badge").click(function(event) {
-    $("#mission-ctl-1").html("<h3>WTF 1</h3>")
-
-    alert("INFO in check-for-badge().click().. calling getGrades(data)")
-
     event.preventDefault();
     event.stopImmediatePropagation();
+
+    $("#mission-ctl-1").text("WTF 1")
+    alert("INFO in check-for-badge().click().. calling getGrades(data)")
+
     $("#lean_overlay").show();
     $(".badge-loader").show();
+
+
     $.ajax({
       type: "GET",
       url: my_url,
