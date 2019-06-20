@@ -224,6 +224,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # TO-DO: change this view to display your data your own way.
     @XBlock.json_handler
     def new_award_badge(self, data, suffix=''):
+        logger.info("In new_award_badge.. the data is {}".format(data))
         """
         The json handler which uses the badge service to award
         a badge.
