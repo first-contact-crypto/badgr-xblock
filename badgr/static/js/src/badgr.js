@@ -19,7 +19,7 @@ function BadgrXBlock(runtime, element, data) {
   function getGrades(data) {
     $("mission-ctl-2").text("WTF 3")
     console.log("INFO In getGrades..")
-    alert("INFO: In getGrades.. data is " + JSON.stringify(data.json())
+    alert("INFO: In getGrades.. data is " + JSON.stringify(data.json()))
 
     if (data.success === "correct") {
       $.ajax({
