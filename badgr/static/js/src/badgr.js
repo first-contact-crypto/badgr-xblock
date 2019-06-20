@@ -1,5 +1,7 @@
 /* Javascript for BadgrXBlock. */
 function BadgrXBlock(runtime, element, data) {
+  console.log("INFO In BadgrXBlock.. the runtime is: " + JSON.stringify(runtime))
+  console.log("INFO IN BadgrXBlock.. the data is: " + JSON.stringify(data))
     var user = data.user;
     var my_url =
         "/api/grades/v1/course_grade/" +
