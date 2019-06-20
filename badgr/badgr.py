@@ -17,10 +17,21 @@ from xblockutils.resources import ResourceLoader
 from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.settings import XBlockWithSettingsMixin
+
+from submissions.models import score_set
+from django.dispatch import receiver
+
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
+
+student_module = None 
+
+@receiver(score_set)
+def submissions_score_set_handler(sender, **kwargs):
+    global student_module 
+    student_module = kwargs
 
 
 @XBlock.needs('settings')
