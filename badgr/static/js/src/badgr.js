@@ -65,8 +65,7 @@ function BadgrXBlock(runtime, element, data) {
         }
       });
     }
-
-
+  }
 
 
   $("#check-for-badge").click(function(event) {
@@ -87,10 +86,10 @@ function BadgrXBlock(runtime, element, data) {
         $("#mission-ctl-2").html(data)
         alert("INFO in check-for-badge().click().. calling getGrades(data)")
         getGrades(data)
+      }
     });
   });
 }
-
 
 
 // EDITED BY MY 
