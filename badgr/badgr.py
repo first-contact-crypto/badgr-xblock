@@ -301,7 +301,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
     @XBlock.json_handler
-    def passed_test(self, data):
+    def passed_test(self, data, suffix=''):
         StudentModule()
         try:
             score = (student_module.grade / student_module.max_grade)
@@ -313,7 +313,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             return "ERROR: student_module does not exit"
 
     @XBlock.json_handler
-    def test_xblock_tree(self):
+    def test_xblock_tree(self, data, blah):
         children = ", ".join([child.name for child in self.parent().children()])
         logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.parent().name, children))
         return {"parent_name": parent_name, "children": children}
