@@ -297,6 +297,20 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
+    @XBlock.json_handler
+    def passed_test(self, data):
+        global student_module
+        try:
+            score = (student_module.grade / student_module.max_grade)
+            if (score >= 0.70):
+                return True
+            else:
+                return False
+        except:
+            return "ERROR: student_module does not exit"
+        
+
+
     @property
     def current_user_key(self):
         user = self.runtime.service(self, 'user').get_current_user()

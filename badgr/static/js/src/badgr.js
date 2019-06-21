@@ -16,6 +16,7 @@ function BadgrXBlock(runtime, element, data) {
     var motivation_message = data.motivation_message;
     var handlerUrl = runtime.handlerUrl(element, "new_award_badge");
     var noAwardUrl = runtime.handlerUrl(element, "no_award_received");
+    var passedTestUrl = runtime.handlerUrl(element, "passed_test")
     var onlyUrl = location.href.replace(location.search, "");
 
     // function scrollPage(target) {
@@ -53,7 +54,29 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
-        if ((data.original_grade.earned_all / data.original_grade.possible) > .70) {
+        var passed_test = None 
+
+        $.ajax({
+          type: "POST",
+          url: passedTestUrl,
+          success: function(data, status, xhr) {
+            if (typeof(data) === typeof("")) {
+              console.log("ERROR in getGrades: " + data)
+            }
+            else if (typeof(data) === typeof(true)) {
+              console.log("SUCCESS In getGrades.. passed_test = " + data.toString)
+              passed_test = data
+            }
+            else {
+              console.log("ERROR In getGrades: I don't know what type the returned handler data is!")
+            }
+          },
+          error: function(xhr, status, error) {
+            console.log("ERROR: In getGrades.. " + status + " " + error)
+          }
+        })
+
+        if (passed_test) {
             $.ajax({
                 type: "POST",
                 url: handlerUrl,
@@ -111,6 +134,7 @@ function BadgrXBlock(runtime, element, data) {
             }
         });
     });
+
 }
 
 
@@ -118,38 +142,38 @@ function BadgrXBlock(runtime, element, data) {
 // EDITED BY MY 
 // https://css-tricks.com/snippets/jquery/smooth-scrolling/
 // Select all links with hashes
-$('a[href*="#"]')
-  // Remove links that don't actually link to anything
-  .not('[href="#"]')
-  .not('[href="#0"]')
-  .click(function(event) {
-    // On-page links
-    if (
-      location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
-      && 
-      location.hostname == this.hostname
-    ) {
-      // Figure out element to scroll to
-      var target = $(this.hash);
-      target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
-      // Does a scroll target exist?
-      if (target.length) {
-        // Only prevent default if animation is actually gonna happen
-        event.preventDefault();
-        $('html, body').animate({
-          scrollTop: target.offset().top
-        }, 1000, function() {
-          // Callback after animation
-          // Must change focus!
-          var $target = $(target);
-          $target.focus();
-          if ($target.is(":focus")) { // Checking if the target was focused
-            return false;
-          } else {
-            $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
-            $target.focus(); // Set focus again
-          };
-        });
-      }
-    }
-  });
+// $('a[href*="#"]')
+//   // Remove links that don't actually link to anything
+//   .not('[href="#"]')
+//   .not('[href="#0"]')
+//   .click(function(event) {
+//     // On-page links
+//     if (
+//       location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') 
+//       && 
+//       location.hostname == this.hostname
+//     ) {
+//       // Figure out element to scroll to
+//       var target = $(this.hash);
+//       target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+//       // Does a scroll target exist?
+//       if (target.length) {
+//         // Only prevent default if animation is actually gonna happen
+//         event.preventDefault();
+//         $('html, body').animate({
+//           scrollTop: target.offset().top
+//         }, 1000, function() {
+//           // Callback after animation
+//           // Must change focus!
+//           var $target = $(target);
+//           $target.focus();
+//           if ($target.is(":focus")) { // Checking if the target was focused
+//             return false;
+//           } else {
+//             $target.attr('tabindex','-1'); // Adding tabindex for elements not focusable
+//             $target.focus(); // Set focus again
+//           };
+//         });
+//       }
+//     }
+//   });
