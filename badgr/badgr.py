@@ -314,9 +314,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     @XBlock.json_handler
     def test_xblock_tree(self, data, blah):
-        children = ", ".join([child.name for child in self.parent().children])
-        logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.parent().name, children))
-        return {"parent_name": self.parent().name, "children": children}
+        children = ", ".join([child.name for child in self.get_parent().get_children()])
+        logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.get_parent().name, children))
+        return {"parent_name": self.get_parent().name, "children": children}
 
         
 
