@@ -135,14 +135,17 @@ function BadgrXBlock(runtime, element, data) {
         event.stopImmediatePropagation();
         $("#lean_overlay").show();
         $(".badge-loader").show();
-        $.ajax({
-            type: "GET",
-            url: my_url,
-            success: getGrades(data),
-            error: function (xhr, errmsg, err) {
-              console.log("ERROR In (#check-for-badge).click.. API call failed" + err + " " + errmsg)
-            }
-        });
+        // $.ajax({
+        //     type: "GET",
+        //     url: my_url,
+        //     success: getGrades(data),
+        //     error: function (xhr, errmsg, err) {
+        //       console.log("ERROR In (#check-for-badge).click.. API call failed" + err + " " + errmsg)
+        //     }
+        // });
+        
+        // ########### ERASE ME
+        getGrades(data)
     });
 
 }
