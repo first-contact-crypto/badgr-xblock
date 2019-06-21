@@ -319,7 +319,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # children = ", ".join([child.name for child in self.get_parent().get_children()])
         logger.info("INFO: In test_xblock_tree.. get_parent().name: {}".format(parent.name))
         # logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.get_parent().name, children))
-        return {"parent_name": self.get_parent().name, "children": children}
+        return {"parent_name": self.get_parent().name, "children": "children.list"}
 
         
 
