@@ -58,7 +58,7 @@ function BadgrXBlock(runtime, element, data) {
         $.ajax({
           type: "POST",
           url: testXblockTreeUrl,
-          data: {"blah":"blah"},
+          data: JSON.stringify({"blah":"blah"}),
           error: function(xhr, status, error) {
             console.log("ERROR In getGrades.. " + status + error)
           }
@@ -143,7 +143,7 @@ function BadgrXBlock(runtime, element, data) {
         //       console.log("ERROR In (#check-for-badge).click.. API call failed" + err + " " + errmsg)
         //     }
         // });
-        
+
         // ########### ERASE ME
         getGrades(data)
     });
