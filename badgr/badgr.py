@@ -18,20 +18,21 @@ from xblock.fragment import Fragment
 from xblockutils.studio_editable import StudioEditableXBlockMixin
 from xblockutils.settings import XBlockWithSettingsMixin
 
-from submissions.models import score_set
-from django.dispatch import receiver
+# from submissions.models import score_set
+# from django.dispatch import receiver
+from courseware.models import StudentModule
 
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
-student_module = None 
+# student_module = None 
 
-@receiver(score_set)
-def submissions_score_set_handler(sender, **kwargs):
-    global student_module 
-    student_module = kwargs
+# @receiver(score_set)
+# def submissions_score_set_handler(sender, **kwargs):
+#     global student_module 
+#     student_module = kwargs
 
 
 @XBlock.needs('settings')
@@ -235,11 +236,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # TO-DO: change this view to display your data your own way.
     @XBlock.json_handler
     def new_award_badge(self, data, suffix=''):
-        logger.info("In new_award_badge.. the data is {}".format(data))
         """
         The json handler which uses the badge service to award
         a badge.
         """
+        logger.info("In new_award_badge.. the data is {}".format(data))
+
+
         e_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_efc20af1-7d43-4d1e-877e-447244ea3fd3.png"
         c_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_63237c1a-3f3d-40b7-9e48-085658d2799f.png"
 
@@ -299,7 +302,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     @XBlock.json_handler
     def passed_test(self, data):
-        global student_module
+        StudentModule()
         try:
             score = (student_module.grade / student_module.max_grade)
             if (score >= 0.70):
@@ -308,6 +311,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 return False
         except:
             return "ERROR: student_module does not exit"
+
+    @XBlock.json_handler
+    def test_xblock_tree(self):
+        children = ", ".join([child.name for child in self.parent().children()])
+        logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.parent().name, children))
+
+
         
 
 
