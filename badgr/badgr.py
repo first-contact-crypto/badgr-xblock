@@ -29,6 +29,7 @@ import pkg_resources
 import logging
 import requests
 import re 
+import functools
 from django.conf import settings
 from xblock.core import XBlock
 from django.core.files import File
@@ -52,6 +53,7 @@ from xblock.validation import ValidationMessage
 from courseware.model_data import ScoresClient
 from opaque_keys.edx.keys import UsageKey
 from opaque_keys import InvalidKeyError
+
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
@@ -232,19 +234,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
 
-    @property
+    @lazy_property
     def property_id(self):
         return self.section_title
 
 
-    @property
+    @lazy_property
     def list_of_problems(self): 
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
-        self.list_of_problems = filter(None, problems)
+        filter(None, problems)
         return problems
 
 
-    @property
+    @lazy_property
     def api_url(self):
         """
         Returns the URL of the Badgr Server from the Settings Service.
@@ -259,7 +261,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
 
-    @property
+    @lazy_property
     def current_user_key(self):
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
@@ -353,21 +355,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         condition_reached = False
         problems = []
-
         if self.problem_id and self.condition == 'single_problem':
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
-
         if self.list_of_problems and self.condition == 'average_problems':
             # now split list of problems id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
             problems = filter(None, problems)
-
         if problems:
             condition_reached = self.condition_on_problem_list(problems)
-
         self.condition_status = condition_reached
         return {'condition_reached': condition_reached}
 
@@ -383,7 +381,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         correct = 0
 
         def _get_usage_key(problem):
-
             loc = self.get_location_string(problem)
             try:
                 uk = UsageKey.from_string(loc)
@@ -392,14 +389,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             return uk
 
         def _get_draft_usage_key(problem):
-
             loc = self.get_location_string(problem, True)
             try:
                 uk = UsageKey.from_string(loc)
                 uk = uk.map_into_course(self.course_id)
             except InvalidKeyError:
                 uk = None
-
             return uk
 
         def _to_reducible(score):
@@ -422,7 +417,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         scores_client.fetch_scores(usages_keys)
         scores = map(scores_client.get, usages_keys)
         scores = filter(None, scores)
-
         problems_to_answer = [score.total for score in scores]
         if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
             evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](
@@ -432,10 +426,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             return evaluation
 
         reducible_scores = map(_to_reducible, scores)
-        correct = reduce(_calculate_correct, reducible_scores,
-                         correct_neutral)
-        total = reduce(_calculate_total, reducible_scores,
-                       total_neutral)
+        correct = reduce(_calculate_correct, reducible_scores, correct_neutral)
+        total = reduce(_calculate_total, reducible_scores, total_neutral)
 
         return self.compare_scores(correct['correct'], total['total'])
 
@@ -446,7 +438,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         course_prefix = 'course'
         resource = 'problem'
         course_url = self.course_id.to_deprecated_string()
-
         if is_draft:
             course_url = course_url.split(self.course_id.run)[0]
             prefix = 'i4x://'
@@ -457,7 +448,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 locator=locator)
         else:
             course_url = course_url.replace(course_prefix, '', 1)
-
             location_string = '{prefix}{couse_str}+{type}@{type_id}+{prefix}@{locator}'.format(
                 prefix=self.course_id.BLOCK_PREFIX,
                 couse_str=course_url,
@@ -472,6 +462,20 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
+
+    
+    def lazy_property(self, function):
+        attribute = '_cache_' + function.__name__
+
+        @property
+        @functools.wraps(function)
+        def decorator(self):
+            if not hasattr(self, attribute):
+                setattr(self, attribute, function(self))
+            return getattr(self, attribute)
+
+        return decorator
+
 
 
     @XBlock.supports("multi_device")
@@ -521,7 +525,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         frag = Fragment()
         context = {'fields': []}
-
         # Build a list of all the fields that can be edited:
         for field_name in self.editable_fields:
             field = self.fields[field_name]
