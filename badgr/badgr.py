@@ -349,6 +349,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         condition_reached = False
         problems = []
+        if not self.condition:
+            self.list_of_problems
         if self.problem_id and self.condition == 'single_problem':
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
@@ -429,9 +431,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         if len(num_problems) == 0:
             pass
         elif num_problems == 1:
-            self.problem_type = 'single_problem'
+            self.condition = 'single_problem'
         else:
-            self.problem_type = 'average_problems'
+            self.condition = 'average_problems'
         return problems
 
 
