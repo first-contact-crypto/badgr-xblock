@@ -360,8 +360,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
-        if self.list_of_problems:
+        if self.list_of_problems and len(problems) > 0:
             # now split list of problems id by spaces or commas
+
             problems = re.split('\s*,*|\s*,\s*', " ".join(self.list_of_problems))
             problems = filter(None, problems)
         if problems:
