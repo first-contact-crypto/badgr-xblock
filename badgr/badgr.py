@@ -234,19 +234,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
 
-    @lazy_property
+    @property
     def property_id(self):
         return self.section_title
 
 
-    @lazy_property
+    @property
     def list_of_problems(self): 
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         filter(None, problems)
         return problems
 
 
-    @lazy_property
+    @property
     def api_url(self):
         """
         Returns the URL of the Badgr Server from the Settings Service.
@@ -261,7 +261,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
 
-    @lazy_property
+    @property
     def current_user_key(self):
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
@@ -462,20 +462,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """Handy helper for getting resources from our kit."""
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
-
-    
-    def lazy_property(self, function):
-        attribute = '_cache_' + function.__name__
-
-        @property
-        @functools.wraps(function)
-        def decorator(self):
-            if not hasattr(self, attribute):
-                setattr(self, attribute, function(self))
-            return getattr(self, attribute)
-
-        return decorator
-
 
 
     @XBlock.supports("multi_device")
