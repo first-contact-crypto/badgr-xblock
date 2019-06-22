@@ -57,6 +57,72 @@ from opaque_keys import InvalidKeyError
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
+def load(path):
+    """Handy helper for getting resources from our kit."""
+    data = pkg_resources.resource_string(__name__, path)
+    return data.decode("utf8")
+
+
+def _actions_generator(block):  # pylint: disable=unused-argument
+    """ Generates a list of possible actions to
+    take when the condition is met """
+
+    return [
+        {"display_name": "Display a message",
+         "value": "display_message"},
+        {"display_name": "Redirect using jump_to_id",
+         "value": "to_jump"},
+        {"display_name": "Redirect to a given unit in the same subsection",
+         "value": "to_unit"},
+        {"display_name": "Redirect to a given URL",
+         "value": "to_url"}
+    ]
+
+
+def _conditions_generator(block):  # pylint: disable=unused-argument
+    """ Generates a list of possible conditions to evaluate """
+    return [
+        {"display_name": "Grade of a problem",
+         "value": "single_problem"},
+        {"display_name": "Average grade of a list of problems",
+         "value": "average_problems"}
+    ]
+
+
+def _operators_generator(block):  # pylint: disable=unused-argument
+    """ Generates a list of possible operators to use """
+    return [
+        {"display_name": "equal to",
+         "value": "eq"},
+        {"display_name": "not equal to",
+         "value": "noeq"},
+        {"display_name": "less than or equal to",
+         "value": "lte"},
+        {"display_name": "less than",
+         "value": "lt"},
+        {"display_name": "greater than or equal to",
+         "value": "gte"},
+        {"display_name": "greater than",
+         "value": "gt"},
+        {"display_name": "none of the problems have been answered",
+         "value": "all_null"},
+        {"display_name": "all problems have been answered",
+         "value": "all_not_null"},
+        {"display_name": "some problem has not been answered",
+         "value": "has_null"}
+    ]
+
+
+def n_all(iterable):
+    """
+    This iterator has the same logic of the function all() for an array.
+    But it only responds to the existence of None and not False
+    """
+    for element in iterable:
+        if element is None:
+            return False
+    return True
+
 
 
 @XBlock.needs('settings')
@@ -137,11 +203,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help="Minium grade required to award this badge",
     )
 
+
     received_award = Boolean(
         default=False,
         scope=Scope.user_state,
         help='Has the user received a badge for this sub-section'
     )
+
 
     check_earned = Boolean(
         default=False,
@@ -149,11 +217,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         help='Has the user check if they are eligible for a badge.'
     )
 
+
     assertion_url = String(
         default=None,
         scope=Scope.user_state,
         help='The user'
     )
+
 
     award_message = String(
         display_name='Award message',
@@ -232,6 +302,118 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     #     info = json.load(f)
     #     #     at = info['badgr_access_token']
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
+
+
+    def validate_field_data(self, validation, data):
+        """
+        Validate this block's field data
+        """
+        if data.tab_to <= 0:
+            validation.add(ValidationMessage(
+                ValidationMessage.ERROR,
+                u"Tab to redirect to must be greater than zero"))
+        if data.ref_value < 0 or data.ref_value > 100:
+            validation.add(ValidationMessage(
+                ValidationMessage.ERROR,
+                u"Score percentage field must "
+                u"be an integer number between 0 and 100"))
+
+
+    def get_location_string(self, locator, is_draft=False):
+        """  Returns the location string for one problem, given its id  """
+        # pylint: disable=no-member
+        course_prefix = 'course'
+        resource = 'problem'
+        course_url = self.course_id.to_deprecated_string()
+        if is_draft:
+            course_url = course_url.split(self.course_id.run)[0]
+            prefix = 'i4x://'
+            location_string = '{prefix}{couse_str}{type_id}/{locator}'.format(
+                prefix=prefix,
+                couse_str=course_url,
+                type_id=resource,
+                locator=locator)
+        else:
+            course_url = course_url.replace(course_prefix, '', 1)
+            location_string = '{prefix}{couse_str}+{type}@{type_id}+{prefix}@{locator}'.format(
+                prefix=self.course_id.BLOCK_PREFIX,
+                couse_str=course_url,
+                type=self.course_id.BLOCK_TYPE_PREFIX,
+                type_id=resource,
+                locator=locator)
+
+        return location_string
+
+
+    def get_condition_status(self):
+        """  Returns the current condition status  """
+        condition_reached = False
+        problems = []
+        if self.problem_id and self.condition == 'single_problem':
+            # now split problem id by spaces or commas
+            problems = re.split('\s*,*|\s*,\s*', self.problem_id)
+            problems = filter(None, problems)
+            problems = problems[:1]
+        if self.list_of_problems and self.condition == 'average_problems':
+            # now split list of problems id by spaces or commas
+            problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
+            problems = filter(None, problems)
+        if problems:
+            condition_reached = self.condition_on_problem_list(problems)
+
+        return condition_reached
+
+    def compare_scores(self, correct, total):
+        """  Returns the result of comparison using custom operator """
+        result = False
+        if total:
+            # getting percentage score for that section
+            percentage = (correct / total) * 100
+
+            if self.operator == 'eq':
+                result = percentage == self.ref_value
+            if self.operator == 'noeq':
+                result = percentage != self.ref_value
+            if self.operator == 'lte':
+                result = percentage <= self.ref_value
+            if self.operator == 'gte':
+                result = percentage >= self.ref_value
+            if self.operator == 'lt':
+                result = percentage < self.ref_value
+            if self.operator == 'gt':
+                result = percentage > self.ref_value
+
+        return result
+
+    def are_all_not_null(self, problems_to_answer):
+        """  Returns true when all problems have been answered """
+        result = False
+        all_problems_were_answered = n_all(problems_to_answer)
+        if problems_to_answer and all_problems_were_answered:
+            result = True
+        return result
+
+    def has_null(self, problems_to_answer):
+        """  Returns true when at least one problem have not been answered """
+        result = False
+        all_problems_were_answered = n_all(problems_to_answer)
+        if not problems_to_answer or not all_problems_were_answered:
+            result = True
+        return result
+
+    def are_all_null(self, problems_to_answer):
+        """  Returns true when all problems have not been answered """
+        for element in problems_to_answer:
+            if element is not None:
+                return False
+        return True
+
+
+    SPECIAL_COMPARISON_DISPATCHER = {
+        'all_not_null': are_all_not_null,
+        'all_null': are_all_null,
+        'has_null': has_null
+    }
 
 
     @property
@@ -351,24 +533,24 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         # return {"parent_name": parent.name, "children": "children.list"}
 
 
-    def get_condition_status(self):
-        """  Returns the current condition status  """
-        condition_reached = False
-        problems = []
-        if self.problem_id:
-            # now split problem id by spaces or commas
-            problems = re.split('\s*,*|\s*,\s*', self.problem_id)
-            problems = filter(None, problems)
-            problems = problems[:1]
-        if self.list_of_problems and len(problems) > 0:
-            # now split list of problems id by spaces or commas
+    # def get_condition_status(self):
+    #     """  Returns the current condition status  """
+    #     condition_reached = False
+    #     problems = []
+    #     if self.problem_id:
+    #         # now split problem id by spaces or commas
+    #         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
+    #         problems = filter(None, problems)
+    #         problems = problems[:1]
+    #     if self.list_of_problems and len(problems) > 0:
+    #         # now split list of problems id by spaces or commas
 
-            problems = re.split('\s*,*|\s*,\s*', " ".join(self.list_of_problems))
-            problems = filter(None, problems)
-        if problems:
-            condition_reached = self.condition_on_problem_list(problems)
-        self.condition_status = condition_reached
-        return {'condition_reached': condition_reached}
+    #         problems = re.split('\s*,*|\s*,\s*', " ".join(self.list_of_problems))
+    #         problems = filter(None, problems)
+    #     if problems:
+    #         condition_reached = self.condition_on_problem_list(problems)
+    #     self.condition_status = condition_reached
+    #     return {'condition_reached': condition_reached}
 
 
     def condition_on_problem_list(self, problems):
@@ -433,30 +615,30 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         return self.compare_scores(correct['correct'], total['total'])
 
 
-    def get_location_string(self, locator, is_draft=False):
-        """  Returns the location string for one problem, given its id  """
-        # pylint: disable=no-member
-        course_prefix = 'course'
-        resource = 'problem'
-        course_url = self.course_id.to_deprecated_string()
-        if is_draft:
-            course_url = course_url.split(self.course_id.run)[0]
-            prefix = 'i4x://'
-            location_string = '{prefix}{couse_str}{type_id}/{locator}'.format(
-                prefix=prefix,
-                couse_str=course_url,
-                type_id=resource,
-                locator=locator)
-        else:
-            course_url = course_url.replace(course_prefix, '', 1)
-            location_string = '{prefix}{couse_str}+{type}@{type_id}+{prefix}@{locator}'.format(
-                prefix=self.course_id.BLOCK_PREFIX,
-                couse_str=course_url,
-                type=self.course_id.BLOCK_TYPE_PREFIX,
-                type_id=resource,
-                locator=locator)
+    # def get_location_string(self, locator, is_draft=False):
+    #     """  Returns the location string for one problem, given its id  """
+    #     # pylint: disable=no-member
+    #     course_prefix = 'course'
+    #     resource = 'problem'
+    #     course_url = self.course_id.to_deprecated_string()
+    #     if is_draft:
+    #         course_url = course_url.split(self.course_id.run)[0]
+    #         prefix = 'i4x://'
+    #         location_string = '{prefix}{couse_str}{type_id}/{locator}'.format(
+    #             prefix=prefix,
+    #             couse_str=course_url,
+    #             type_id=resource,
+    #             locator=locator)
+    #     else:
+    #         course_url = course_url.replace(course_prefix, '', 1)
+    #         location_string = '{prefix}{couse_str}+{type}@{type_id}+{prefix}@{locator}'.format(
+    #             prefix=self.course_id.BLOCK_PREFIX,
+    #             couse_str=course_url,
+    #             type=self.course_id.BLOCK_TYPE_PREFIX,
+    #             type_id=resource,
+    #             locator=locator)
 
-        return location_string
+    #     return location_string
 
 
     def resource_string(self, path):
