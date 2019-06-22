@@ -235,7 +235,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     @property
-    def property_id(self):
+    def problem_id(self):
         return self.section_title
 
 
