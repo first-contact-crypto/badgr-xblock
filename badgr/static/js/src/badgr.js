@@ -61,7 +61,7 @@ function BadgrXBlock(runtime, element, data) {
           url: condition_status_handler_url,
           data: JSON.stringify({"blah":"blah"}),
           success: function(data) {
-            passed_test = data.condition_reached
+            passed_test = data.status
           },
           error: function(xhr, status, error) {
             console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);

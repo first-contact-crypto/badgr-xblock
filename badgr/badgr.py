@@ -48,6 +48,11 @@ from courseware.model_data import ScoresClient
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
 
+from xblock.validation import ValidationMessage
+from courseware.model_data import ScoresClient
+from opaque_keys.edx.keys import UsageKey
+from opaque_keys import InvalidKeyError
+
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
 
@@ -231,11 +236,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def property_id(self):
         return self.section_title
 
+
     @property
     def list_of_problems(self): 
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         self.list_of_problems = filter(None, problems)
         return problems
+
 
     @property
     def api_url(self):
@@ -251,11 +258,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
+
     @property
     def current_user_key(self):
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
+
 
     @XBlock.json_handler
     def no_award_received(self, data, suffix=''):
@@ -328,11 +337,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.json_handler
     def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
         """  Returns the actual condition state  """
+        return {'status': self.get_condition_status()}
 
-        return {
-            'success': True,
-            'status': self.get_condition_status()
-        }
 
     def get_course_problems_usage_key_list(self):
         return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
@@ -341,6 +347,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def get_this_parents_children(self):
         return self.get_parent().get_children()
         # return {"parent_name": parent.name, "children": "children.list"}
+
 
     def get_condition_status(self):
         """  Returns the current condition status  """
@@ -363,6 +370,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         self.condition_status = condition_reached
         return {'condition_reached': condition_reached}
+
 
     def condition_on_problem_list(self, problems):
         """ Returns the score for a list of problems """
@@ -459,13 +467,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return location_string
 
-    # def get_list_of_issuers(self):
-    #     """
-    #     Get a list of issuers from badgr.proversity.org
-    #     """
-    #     issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
-    #                                headers={'Authorization': 'Bearer {}'.format(self.api_token)})
-    #     return issuer_list.json()
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
@@ -513,6 +514,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return frag
 
+
     def studio_view(self, context):
         """
         Render a form for editing this XBlock
@@ -538,6 +540,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'badgrApiToken': "not_needed_??"
         })
         return frag
+
+
 
     # TO-DO: change this to create the scenarios you'd like to see in the
     # workbench while developing your XBlock.
