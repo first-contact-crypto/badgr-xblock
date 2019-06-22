@@ -19,6 +19,7 @@ function BadgrXBlock(runtime, element, data) {
     // var passedTestUrl = runtime.handlerUrl(element, "passed_test")
     // var testXblockTreeUrl = runtime.handlerUrl(element, "test_xblock_tree")
     var onlyUrl = location.href.replace(location.search, "");
+    var conditionStatusHandlerURL = runtime.handlerUrl(element, "conditon_status_url")
 
     // function scrollPage(target) {
     //     if (target.length) {
@@ -55,14 +56,14 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
-        // $.ajax({
-        //   type: "POST",
-        //   url: testXblockTreeUrl,
-        //   data: JSON.stringify({"blah":"blah"}),
-        //   error: function(xhr, status, error) {
-        //     console.log("ERROR In getGrades.. " + status + error)
-        //   }
-        // })
+        $.ajax({
+          type: "POST",
+          url: condition_status_handler_url,
+          data: JSON.stringify({"blah":"blah"}),
+          error: function(xhr, status, error) {
+            console.log("ERROR In getGrades.. " + status + error)
+          }
+        })
 
         var passed_test = true
 

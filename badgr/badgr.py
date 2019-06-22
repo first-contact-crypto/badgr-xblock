@@ -28,6 +28,7 @@ import json
 import pkg_resources
 import logging
 import requests
+import re 
 from django.conf import settings
 from xblock.core import XBlock
 from django.core.files import File
@@ -42,6 +43,7 @@ from xblockutils.settings import XBlockWithSettingsMixin
 # from submissions.models import score_set
 # from django.dispatch import receiver
 from courseware.models import StudentModule
+from courseware.model_data import ScoresClient
 
 logger = logging.getLogger(__name__)
 loader = ResourceLoader(__name__)
@@ -111,11 +113,15 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     )
 
     section_title = String(
-        display_name="Section title",
-        help="DO NOT CHANGE",
+        display_name="Problem ID",
+        help="IMPORTANT: Problem id to use for the condition.  (Not the "
+                        "complete problem locator. Only the 32 characters "
+                        "alfanumeric id. "
+                        "Example: 618c5933b8b544e4a4cc103d3e508378)",
         scope=Scope.settings,
-        default=u"Section"
+        default=u""
     )
+     
 
     pass_mark = Float(
         display_name='Pass mark',
@@ -220,19 +226,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     #     at = info['badgr_access_token']
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
-    def get_course_problems_usage_key_list(self):
-        return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
 
-        
-    def get_this_parents_children(self):
-        return self.get_parent().get_children()
-        # return {"parent_name": parent.name, "children": "children.list"}
+    property_id = self.section_title
 
-    # @XBlock.json_handler
-    # def test_print_children(self, data, suffix=''):
-    #     for child in self.get_this_parents_children():
-    #         logger.info("INFO In test_print_children.. a child of this parent is: name={}".format(child.name, ))
-
+    @property
+    def list_of_problems(self):
+        problems = re.split('\s*,*|\s*,\s*', self.problem_id)
+        self.list_of_problems = filter(None, problems)
 
     @property
     def api_url(self):
@@ -248,20 +248,24 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
-    # def get_list_of_issuers(self):
-    #     """
-    #     Get a list of issuers from badgr.proversity.org
-    #     """
-    #     issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
-    #                                headers={'Authorization': 'Bearer {}'.format(self.api_token)})
-    #     return issuer_list.json()
+    @property
+    def current_user_key(self):
+        user = self.runtime.service(self, 'user').get_current_user()
+        # We may be in the SDK, in which case the username may not really be available.
+        return user.opt_attrs.get('edx-platform.username', 'username')
 
-    def resource_string(self, path):
-        """Handy helper for getting resources from our kit."""
-        data = pkg_resources.resource_string(__name__, path)
-        return data.decode("utf8")
+    @XBlock.json_handler
+    def no_award_received(self, data, suffix=''):
+        """
+        The json handler which uses the badge service to deal with no
+        badge being earned.
+        """
+        self.received_award = False
+        self.check_earned = True
 
-    # TO-DO: change this view to display your data your own way.
+        return {"image_url": self.image_url, "assertion_url": self.assertion_url}
+
+  
     @XBlock.json_handler
     def new_award_badge(self, data, suffix=''):
         """
@@ -317,24 +321,153 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return badge_html_dict
 
+
     @XBlock.json_handler
-    def no_award_received(self, data, suffix=''):
-        """
-        The json handler which uses the badge service to deal with no
-        badge being earned.
-        """
-        self.received_award = False
-        self.check_earned = True
+    def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
+        """  Returns the actual condition state  """
 
-        return {"image_url": self.image_url, "assertion_url": self.assertion_url}
+        return {
+            'success': True,
+            'status': self.get_condition_status()
+        }
+
+    def get_course_problems_usage_key_list(self):
+        return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
+
+        
+    def get_this_parents_children(self):
+        return self.get_parent().get_children()
+        # return {"parent_name": parent.name, "children": "children.list"}
+
+    def get_condition_status(self):
+        """  Returns the current condition status  """
+        condition_reached = False
+        problems = []
+
+        if self.problem_id and self.condition == 'single_problem':
+            # now split problem id by spaces or commas
+            problems = re.split('\s*,*|\s*,\s*', self.problem_id)
+            problems = filter(None, problems)
+            problems = problems[:1]
+
+        if self.list_of_problems and self.condition == 'average_problems':
+            # now split list of problems id by spaces or commas
+            problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
+            problems = filter(None, problems)
+
+        if problems:
+            condition_reached = self.condition_on_problem_list(problems)
+
+        self.condition_status = condition_reached
+        return condition_reached
+
+    def condition_on_problem_list(self, problems):
+        """ Returns the score for a list of problems """
+        # pylint: disable=no-member
+        user_id = self.xmodule_runtime.user_id
+        scores_client = ScoresClient(self.course_id, user_id)
+        correct_neutral = {'correct': 0.0}
+        total_neutral = {'total': 0.0}
+        total = 0
+        correct = 0
+
+        def _get_usage_key(problem):
+
+            loc = self.get_location_string(problem)
+            try:
+                uk = UsageKey.from_string(loc)
+            except InvalidKeyError:
+                uk = _get_draft_usage_key(problem)
+            return uk
+
+        def _get_draft_usage_key(problem):
+
+            loc = self.get_location_string(problem, True)
+            try:
+                uk = UsageKey.from_string(loc)
+                uk = uk.map_into_course(self.course_id)
+            except InvalidKeyError:
+                uk = None
+
+            return uk
+
+        def _to_reducible(score):
+            correct_default = 0.0
+            total_default = 1.0
+            if not score.total:
+                return {'correct': correct_default, 'total': total_default}
+            else:
+                return {'correct': score.correct, 'total': score.total}
+
+        def _calculate_correct(first_score, second_score):
+            correct = first_score['correct'] + second_score['correct']
+            return {'correct': correct}
+
+        def _calculate_total(first_score, second_score):
+            total = first_score['total'] + second_score['total']
+            return {'total': total}
+
+        usages_keys = map(_get_usage_key, problems)
+        scores_client.fetch_scores(usages_keys)
+        scores = map(scores_client.get, usages_keys)
+        scores = filter(None, scores)
+
+        problems_to_answer = [score.total for score in scores]
+        if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
+            evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](
+                self,
+                problems_to_answer)
+
+            return evaluation
+
+        reducible_scores = map(_to_reducible, scores)
+        correct = reduce(_calculate_correct, reducible_scores,
+                         correct_neutral)
+        total = reduce(_calculate_total, reducible_scores,
+                       total_neutral)
+
+        return self.compare_scores(correct['correct'], total['total'])
 
 
-    @property
-    def current_user_key(self):
-        user = self.runtime.service(self, 'user').get_current_user()
-        # We may be in the SDK, in which case the username may not really be available.
-        return user.opt_attrs.get('edx-platform.username', 'username')
+    def get_location_string(self, locator, is_draft=False):
+        """  Returns the location string for one problem, given its id  """
+        # pylint: disable=no-member
+        course_prefix = 'course'
+        resource = 'problem'
+        course_url = self.course_id.to_deprecated_string()
 
+        if is_draft:
+            course_url = course_url.split(self.course_id.run)[0]
+            prefix = 'i4x://'
+            location_string = '{prefix}{couse_str}{type_id}/{locator}'.format(
+                prefix=prefix,
+                couse_str=course_url,
+                type_id=resource,
+                locator=locator)
+        else:
+            course_url = course_url.replace(course_prefix, '', 1)
+
+            location_string = '{prefix}{couse_str}+{type}@{type_id}+{prefix}@{locator}'.format(
+                prefix=self.course_id.BLOCK_PREFIX,
+                couse_str=course_url,
+                type=self.course_id.BLOCK_TYPE_PREFIX,
+                type_id=resource,
+                locator=locator)
+
+        return location_string
+
+    # def get_list_of_issuers(self):
+    #     """
+    #     Get a list of issuers from badgr.proversity.org
+    #     """
+    #     issuer_list = requests.get('{}/v2/issuers'.format(self.api_url),
+    #                                headers={'Authorization': 'Bearer {}'.format(self.api_token)})
+    #     return issuer_list.json()
+
+    def resource_string(self, path):
+        """Handy helper for getting resources from our kit."""
+        data = pkg_resources.resource_string(__name__, path)
+        return data.decode("utf8")
 
 
     @XBlock.supports("multi_device")
