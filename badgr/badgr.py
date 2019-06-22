@@ -359,7 +359,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = self.condition_on_problem_list(problems)
 
         self.condition_status = condition_reached
-        return condition_reached
+        return {'condition_reached': condition_reached}
 
     def condition_on_problem_list(self, problems):
         """ Returns the score for a list of problems """

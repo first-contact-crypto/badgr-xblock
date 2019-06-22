@@ -60,34 +60,13 @@ function BadgrXBlock(runtime, element, data) {
           type: "POST",
           url: condition_status_handler_url,
           data: JSON.stringify({"blah":"blah"}),
+          success: function(data) {
+            passed_test = data.condition_reached
+          },
           error: function(xhr, status, error) {
-            console.log("ERROR In getGrades.. " + status + error)
+            console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
           }
         })
-
-        var passed_test = true
-
-        // var passed_test = None 
-
-        // $.ajax({
-        //   type: "POST",
-        //   url: passedTestUrl,
-        //   success: function(data, status, xhr) {
-        //     if (typeof(data) === typeof("")) {
-        //       console.log("ERROR in getGrades: " + data)
-        //     }
-        //     else if (typeof(data) === typeof(true)) {
-        //       console.log("SUCCESS In getGrades.. passed_test = " + data.toString)
-        //       passed_test = data
-        //     }
-        //     else {
-        //       console.log("ERROR In getGrades: I don't know what type the returned handler data is!")
-        //     }
-        //   },
-        //   error: function(xhr, status, error) {
-        //     console.log("ERROR: In getGrades.. " + status + " " + error)
-        //   }
-        // })
 
         if (passed_test) {
             $.ajax({
@@ -112,7 +91,7 @@ function BadgrXBlock(runtime, element, data) {
                         " does not exist. Please contact your support administrator." +
                         "</div>"
                     ); // add the error to the dom
-                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                    console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
                 }
             });
         } else {
@@ -128,6 +107,9 @@ function BadgrXBlock(runtime, element, data) {
                     );
                     $(".badgr_block").append($motivation);
                     $("#check-for-badge").remove();
+                },
+                error: function(xhr, status, error) {
+                  console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
                 }
             });
         }
@@ -138,17 +120,14 @@ function BadgrXBlock(runtime, element, data) {
         event.stopImmediatePropagation();
         $("#lean_overlay").show();
         $(".badge-loader").show();
-        // $.ajax({
-        //     type: "GET",
-        //     url: my_url,
-        //     success: getGrades(data),
-        //     error: function (xhr, errmsg, err) {
-        //       console.log("ERROR In (#check-for-badge).click.. API call failed" + err + " " + errmsg)
-        //     }
-        // });
-
-        // ########### ERASE ME
-        getGrades(data)
+        $.ajax({
+            type: "GET",
+            url: my_url,
+            success: getGrades(data),
+            error: function (xhr, errmsg, err) {
+              console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
+            }
+        });
     });
 
 }
