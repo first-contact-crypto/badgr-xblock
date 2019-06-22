@@ -349,8 +349,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         condition_reached = False
         problems = []
-        if not self.condition:
-            self.list_of_problems
+        self.list_of_problems                                       # hack to initialize condition variable
         if self.problem_id and self.condition == 'single_problem':
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
@@ -540,26 +539,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def get_this_parents_children(self):
         return self.get_parent().get_children()
         # return {"parent_name": parent.name, "children": "children.list"}
-
-
-    # def get_condition_status(self):
-    #     """  Returns the current condition status  """
-    #     condition_reached = False
-    #     problems = []
-    #     if self.problem_id:
-    #         # now split problem id by spaces or commas
-    #         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
-    #         problems = filter(None, problems)
-    #         problems = problems[:1]
-    #     if self.list_of_problems and len(problems) > 0:
-    #         # now split list of problems id by spaces or commas
-
-    #         problems = re.split('\s*,*|\s*,\s*', " ".join(self.list_of_problems))
-    #         problems = filter(None, problems)
-    #     if problems:
-    #         condition_reached = self.condition_on_problem_list(problems)
-    #     self.condition_status = condition_reached
-    #     return {'condition_reached': condition_reached}
 
 
     def condition_on_problem_list(self, problems):
