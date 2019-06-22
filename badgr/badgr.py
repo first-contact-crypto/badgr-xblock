@@ -349,7 +349,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         condition_reached = False
         problems = []
-        self.list_of_problems                                       # hack to initialize condition variable
+        # hack to initialize condition and operator variables
+        self.list_of_problems
+        self.operator = "gte"                                       
         if self.problem_id and self.condition == 'single_problem':
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
