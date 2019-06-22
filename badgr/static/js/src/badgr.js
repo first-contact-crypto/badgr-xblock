@@ -58,7 +58,7 @@ function BadgrXBlock(runtime, element, data) {
 
         $.ajax({
           type: "POST",
-          url: condition_status_handler_url,
+          url: conditionStatusHandlerURL,
           data: JSON.stringify({"blah":"blah"}),
           success: function(data) {
             passed_test = data.status
