@@ -19,7 +19,7 @@ function BadgrXBlock(runtime, element, data) {
     // var passedTestUrl = runtime.handlerUrl(element, "passed_test")
     // var testXblockTreeUrl = runtime.handlerUrl(element, "test_xblock_tree")
     var onlyUrl = location.href.replace(location.search, "");
-    var conditionStatusHandlerURL = runtime.handlerUrl(element, "conditon_status_url")
+    var conditionStatusHandlerURL = runtime.handlerUrl(element, "condition_status_handler")
 
     // function scrollPage(target) {
     //     if (target.length) {
