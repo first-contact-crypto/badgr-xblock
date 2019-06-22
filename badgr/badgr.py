@@ -425,6 +425,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def list_of_problems(self): 
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         filter(None, problems)
+        num_problems = len(problems)
+        if len(num_problems) == 0:
+            pass
+        elif num_problems == 1:
+            self.problem_type = 'single_problem'
+        else:
+            self.problem_type = 'average_problems'
         return problems
 
 
