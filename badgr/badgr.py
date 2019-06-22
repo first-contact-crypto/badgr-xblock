@@ -227,12 +227,15 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
 
-    property_id = self.section_title
+    @property
+    def property_id(self):
+        return self.section_title
 
     @property
-    def list_of_problems(self):
+    def list_of_problems(self): 
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         self.list_of_problems = filter(None, problems)
+        return problems
 
     @property
     def api_url(self):
