@@ -16,8 +16,8 @@ function BadgrXBlock(runtime, element, data) {
     var motivation_message = data.motivation_message;
     var handlerUrl = runtime.handlerUrl(element, "new_award_badge");
     var noAwardUrl = runtime.handlerUrl(element, "no_award_received");
-    var passedTestUrl = runtime.handlerUrl(element, "passed_test")
-    var testXblockTreeUrl = runtime.handlerUrl(element, "test_xblock_tree")
+    // var passedTestUrl = runtime.handlerUrl(element, "passed_test")
+    // var testXblockTreeUrl = runtime.handlerUrl(element, "test_xblock_tree")
     var onlyUrl = location.href.replace(location.search, "");
 
     // function scrollPage(target) {
@@ -55,14 +55,16 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
-        $.ajax({
-          type: "POST",
-          url: testXblockTreeUrl,
-          data: JSON.stringify({"blah":"blah"}),
-          error: function(xhr, status, error) {
-            console.log("ERROR In getGrades.. " + status + error)
-          }
-        })
+        // $.ajax({
+        //   type: "POST",
+        //   url: testXblockTreeUrl,
+        //   data: JSON.stringify({"blah":"blah"}),
+        //   error: function(xhr, status, error) {
+        //     console.log("ERROR In getGrades.. " + status + error)
+        //   }
+        // })
+
+        var passed_test = true
 
         // var passed_test = None 
 
@@ -86,48 +88,48 @@ function BadgrXBlock(runtime, element, data) {
         //   }
         // })
 
-        // if (passed_test) {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: handlerUrl,
-        //         data: JSON.stringify({ name: "badgr" }),
-        //         success: function (json) {
-        //             // Just reload the page, the correct html with the badge will be displayed
-        //             var onlyUrl = location.href.replace(location.search, "");
-        //             window.location = onlyUrl;
-        //             return false;
-        //         },
-        //         error: function (xhr, errmsg, err) {
-        //             $(".badge-loader").hide();
-        //             $("#lean_overlay").hide();
-        //             $("#check-for-badge").remove();
-        //             $("#results").html(
-        //                 "<div>Oops! We have encountered an error, the badge " +
-        //                 '"' +
-        //                 badge_slug +
-        //                 '"' +
-        //                 " does not exist. Please contact your support administrator." +
-        //                 "</div>"
-        //             ); // add the error to the dom
-        //             console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
-        //         }
-        //     });
-        // } else {
-        //     $.ajax({
-        //         type: "POST",
-        //         url: noAwardUrl,
-        //         data: JSON.stringify({ name: "badgr" }),
-        //         success: function (json) {
-        //             $(".badge-loader").hide();
-        //             $("#lean_overlay").hide();
-        //             var $motivation = $(
-        //                 '<p class="badgr-motivation">' + motivation_message + "</p>"
-        //             );
-        //             $(".badgr_block").append($motivation);
-        //             $("#check-for-badge").remove();
-        //         }
-        //     });
-        // }
+        if (passed_test) {
+            $.ajax({
+                type: "POST",
+                url: handlerUrl,
+                data: JSON.stringify({ name: "badgr" }),
+                success: function (json) {
+                    // Just reload the page, the correct html with the badge will be displayed
+                    var onlyUrl = location.href.replace(location.search, "");
+                    window.location = onlyUrl;
+                    return false;
+                },
+                error: function (xhr, errmsg, err) {
+                    $(".badge-loader").hide();
+                    $("#lean_overlay").hide();
+                    $("#check-for-badge").remove();
+                    $("#results").html(
+                        "<div>Oops! We have encountered an error, the badge " +
+                        '"' +
+                        badge_slug +
+                        '"' +
+                        " does not exist. Please contact your support administrator." +
+                        "</div>"
+                    ); // add the error to the dom
+                    console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+                }
+            });
+        } else {
+            $.ajax({
+                type: "POST",
+                url: noAwardUrl,
+                data: JSON.stringify({ name: "badgr" }),
+                success: function (json) {
+                    $(".badge-loader").hide();
+                    $("#lean_overlay").hide();
+                    var $motivation = $(
+                        '<p class="badgr-motivation">' + motivation_message + "</p>"
+                    );
+                    $(".badgr_block").append($motivation);
+                    $("#check-for-badge").remove();
+                }
+            });
+        }
     }
 
     $("#check-for-badge").click(function (event) {

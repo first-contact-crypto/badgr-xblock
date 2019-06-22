@@ -1,6 +1,27 @@
 """TO-DO: Write a description of what this XBlock is.
 Just to trigger a change.. remove me !!
 """
+# Examples:
+# * Old style: "i4x://edX/DemoX.1/problem/466f474fa4d045a8b7bde1b911e095ca"
+# * New style: "block-v1:edX+DemoX.1+2014+type@problem+block@466f474fa4d045a8b7bde1b911e095ca"
+
+# Old style usage IDs are missing course run information (note the missing
+# "2004" in the example above). We call map_into_course() to add that
+# potentially missing information. That way, we can later get a complete
+# CourseKey via usage_key.course_key
+
+# Note: Keys are immutable -- map_into_course() is returning a new key,
+#       not modifying the old one.
+# try:
+#     # Returns a subclass of UsageKey, depending on what's being parsed.
+#     usage_key = UsageKey.from_string(usage_id).map_into_course(course_key)
+# except InvalidKeyError:
+#     # We don't recognize this key
+
+# To serialize back into strings, just call unicode() on them or pass
+# them to format() like you'd expect.
+# print "Course: {}".format(course_key)
+# print "Usage: {}".format(usage_key)
 
 import os
 import json
@@ -27,12 +48,6 @@ loader = ResourceLoader(__name__)
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
-# student_module = None 
-
-# @receiver(score_set)
-# def submissions_score_set_handler(sender, **kwargs):
-#     global student_module 
-#     student_module = kwargs
 
 
 @XBlock.needs('settings')
@@ -205,6 +220,19 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     #     at = info['badgr_access_token']
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
+    def get_course_problems_usage_key_list(self):
+        return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
+
+        
+    def get_this_parents_children(self):
+        return self.get_parent().get_children()
+        # return {"parent_name": parent.name, "children": "children.list"}
+
+    # @XBlock.json_handler
+    # def test_print_children(self, data, suffix=''):
+    #     for child in self.get_this_parents_children():
+    #         logger.info("INFO In test_print_children.. a child of this parent is: name={}".format(child.name, ))
+
 
     @property
     def api_url(self):
@@ -300,35 +328,14 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         return {"image_url": self.image_url, "assertion_url": self.assertion_url}
 
-    @XBlock.json_handler
-    def passed_test(self, data, suffix=''):
-        StudentModule()
-        try:
-            score = (student_module.grade / student_module.max_grade)
-            if (score >= 0.70):
-                return True
-            else:
-                return False
-        except:
-            return "ERROR: student_module does not exit"
-
-    @XBlock.json_handler
-    def test_xblock_tree(self, data, blah):
-        parent = self.get_parent()
-        # children = parent.get_parent()
-        # # children = ", ".join([child.name for child in self.get_parent().get_children()])
-        logger.info("INFO: In test_xblock_tree.. get_parent().name: {}".format(str(type(parent))))
-        # logger.info("INFO: In new_award_badge.. the parent xblock is: {} the parents children are: {}".format(self.get_parent().name, children))
-        return {"parent_name": parent.name, "children": "children.list"}
-
-        
-
 
     @property
     def current_user_key(self):
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
+
+
 
     @XBlock.supports("multi_device")
     def student_view(self, context=None):
