@@ -8,7 +8,7 @@ function BadgrXBlock(runtime, element, data) {
         data.course_id +
         "/users/?username=" +
         user;
-    var my_url = "https://learn.firstcontactcrypto.com/api/grades/v1/subsection/" + data.course_id + "/?user_id=" + user 
+    var my_url = "https://learn.firstcontactcrypto.com/api/grades/v1/subsection/" + data.course_id + "/?user_id=" + user.id
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
     var award_message = data.award_message;
