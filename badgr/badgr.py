@@ -59,12 +59,16 @@ ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
 
 
 def load(path):
+    logger.info("In _actions_generator..")
+
     """Handy helper for getting resources from our kit."""
     data = pkg_resources.resource_string(__name__, path)
     return data.decode("utf8")
 
 
 def _actions_generator(block):  # pylint: disable=unused-argument
+    logger.info("In _actions_generator..")
+
     """ Generates a list of possible actions to
     take when the condition is met """
 
@@ -82,6 +86,8 @@ def _actions_generator(block):  # pylint: disable=unused-argument
 
 def _conditions_generator(block):  # pylint: disable=unused-argument
     """ Generates a list of possible conditions to evaluate """
+    logger.info("In _conditions_generator..")
+
     return [
         {"display_name": "Grade of a problem",
          "value": "single_problem"},
@@ -92,6 +98,8 @@ def _conditions_generator(block):  # pylint: disable=unused-argument
 
 def _operators_generator(block):  # pylint: disable=unused-argument
     """ Generates a list of possible operators to use """
+    logger.info("In _operators_generator..")
+
     return [
         {"display_name": "equal to",
          "value": "eq"},
@@ -119,6 +127,8 @@ def n_all(iterable):
     This iterator has the same logic of the function all() for an array.
     But it only responds to the existence of None and not False
     """
+    logger.info("In n_all..")
+
     for element in iterable:
         if element is None:
             return False
@@ -138,6 +148,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # self.<fieldname>.
 
     # TO-DO: delete count, and define your own fields.
+    logger.info("In no_award_received..")
+
     display_name = String(
         display_name="Display Name",
         help="This name appears in the horizontal navigation at the top of the page.",
@@ -309,6 +321,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         Validate this block's field data
         """
+        logger.info("In validate_field_data..")
+
         if data.tab_to <= 0:
             validation.add(ValidationMessage(
                 ValidationMessage.ERROR,
@@ -323,6 +337,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def get_location_string(self, locator, is_draft=False):
         """  Returns the location string for one problem, given its id  """
         # pylint: disable=no-member
+        logger.info("In get_location_string..")
+
         course_prefix = 'course'
         resource = 'problem'
         course_url = unicode(self.course_id)
@@ -348,6 +364,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def get_condition_status(self):
         """  Returns the current condition status  """
+        logger.info("In get_condition_status..")
+
         condition_reached = False
         problems = []
         # hack to initialize condition and operator variables
@@ -369,6 +387,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def compare_scores(self, correct, total):
         """  Returns the result of comparison using custom operator """
+        logger.info("In compare_scores..")
+
         result = False
         if total:
             # getting percentage score for that section
@@ -391,6 +411,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def are_all_not_null(self, problems_to_answer):
         """  Returns true when all problems have been answered """
+        logger.info("In are_all_not_null..")
+
         result = False
         all_problems_were_answered = n_all(problems_to_answer)
         if problems_to_answer and all_problems_were_answered:
@@ -399,6 +421,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def has_null(self, problems_to_answer):
         """  Returns true when at least one problem have not been answered """
+        logger.info("In has_null..")
+
         result = False
         all_problems_were_answered = n_all(problems_to_answer)
         if not problems_to_answer or not all_problems_were_answered:
@@ -407,6 +431,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def are_all_null(self, problems_to_answer):
         """  Returns true when all problems have not been answered """
+        logger.info("In are_all_null..")
+
         for element in problems_to_answer:
             if element is not None:
                 return False
@@ -422,13 +448,16 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     @property
     def problem_id(self):
-        logger.info("In new_award_badge.. the data is {}".format(data))
+        logger.info("In problem_id..")
+
+        logger.info("In problem_id..")
         return self.section_title
 
 
     @property
     def list_of_problems(self): 
-        logger.info("In new_award_badge.. the data is {}".format(data))
+
+        logger.info("In list_of_problems..")
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         filter(None, problems)
         num_problems = len(problems)
@@ -453,13 +482,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 }
             },
         """
-        logger.info("In api_url.. the data is {}".format(data))
+        logger.info("In api_url..")
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
 
     @property
     def current_user_key(self):
-        logger.info("In current_user_key.. the data is {}".format(data))
+        logger.info("In current_user_key..")
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
@@ -471,7 +500,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to deal with no
         badge being earned.
         """
-        logger.info("In no_award_received.. the data is {}".format(data))
+        logger.info("In no_award_received..")
         self.received_award = False
         self.check_earned = True
 
@@ -484,7 +513,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to award
         a badge.
         """
-        logger.info("In new_award_badge.. the data is {}".format(data))
+        logger.info("In new_award_badge..")
 
 
         e_image = "https://media.us.badgr.io/uploads/badges/issuer_badgeclass_efc20af1-7d43-4d1e-877e-447244ea3fd3.png"
@@ -537,24 +566,24 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.json_handler
     def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
         """  Returns the actual condition state  """
-        logger.info("In condition_status_handler.. the data is {}".format(data))
+        logger.info("In condition_status_handler..")
 
         return {'status': self.get_condition_status()}
 
 
     def get_course_problems_usage_key_list(self):
-        logger.info("In get_course_problems_usage_key_list.. the data is {}".format(data))
+        logger.info("In get_course_problems_usage_key_list..")
         return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
 
         
     def get_this_parents_children(self):
-        logger.info("In get_this_parents_children.. the data is {}".format(data))
+        logger.info("In get_this_parents_children..")
         return self.get_parent().get_children()
         # return {"parent_name": parent.name, "children": "children.list"}
 
 
     def condition_on_problem_list(self, problems):
-        logger.info("In condition_on_problem_list.. the data is {}".format(data))
+        logger.info("In condition_on_problem_list..")
         """ Returns the score for a list of problems """
         # pylint: disable=no-member
         user_id = self.xmodule_runtime.user_id
@@ -640,7 +669,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
-        logger.info("In resource_string.. the data is {}".format(data))
+        logger.info("In resource_string..")
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
 
@@ -651,7 +680,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The primary view of the BadgrXBlock, shown to students
         when viewing courses.
         """
-        logger.info("In student_view.. the data is {}".format(data))
+        logger.info("In student_view..")
         if self.runtime.get_real_user is not None:
             user = self.runtime.get_real_user(
                 self.runtime.anonymous_student_id)
@@ -690,7 +719,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         Render a form for editing this XBlock
         """
-        logger.info("In studio_view.. the data is {}".format(data))
+        logger.info("In studio_view..")
         frag = Fragment()
         context = {'fields': []}
         # Build a list of all the fields that can be edited:
@@ -718,7 +747,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # workbench while developing your XBlock.
     @staticmethod
     def workbench_scenarios():
-        logger.info("In workbench_scenarios.. the data is {}".format(data))
+        logger.info("In workbench_scenarios..")
         """A canned scenario for display in the workbench."""
         return [
             ("BadgrXBlock",
