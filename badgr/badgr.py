@@ -56,6 +56,7 @@ from opaque_keys import InvalidKeyError
 
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
+GRADE_THRESHOLD = 70
 
 def load(path):
     """Handy helper for getting resources from our kit."""
@@ -374,17 +375,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             percentage = (correct / total) * 100
 
             if self.operator == 'eq':
-                result = percentage == self.ref_value
+                result = percentage == GRADE_THRESHOLD
             if self.operator == 'noeq':
-                result = percentage != self.ref_value
+                result = percentage != GRADE_THRESHOLD
             if self.operator == 'lte':
-                result = percentage <= self.ref_value
+                result = percentage <= GRADE_THRESHOLD
             if self.operator == 'gte':
-                result = percentage >= self.ref_value
+                result = percentage >= GRADE_THRESHOLD
             if self.operator == 'lt':
-                result = percentage < self.ref_value
+                result = percentage < GRADE_THRESHOLD
             if self.operator == 'gt':
-                result = percentage > self.ref_value
+                result = percentage > GRADE_THRESHOLD
 
         return result
 
