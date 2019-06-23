@@ -124,17 +124,17 @@ function BadgrXBlock(runtime, element, data) {
         $("#lean_overlay").show();
         $(".badge-loader").show();
         getGrades(data);
-    //     $.ajax({
-    //         type: "GET",
-    //         url: my_url,
-    //         success: function(data, status, xhr) {
-    //             getGrades(data)
-    //             console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
-    //         },
-    //         error: function(xhr, errmsg, err) {
-    //           console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
-    //         }
-    //     });
+        // $.ajax({
+        //     type: "GET",
+        //     url: my_url,
+        //     success: function(data, status, xhr) {
+        //         getGrades(data)
+        //         console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
+        //     },
+        //     error: function(xhr, errmsg, err) {
+        //       console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
+        //     }
+        // });
     });
 
 }
