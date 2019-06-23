@@ -21,6 +21,7 @@ function BadgrXBlock(runtime, element, data) {
     var onlyUrl = location.href.replace(location.search, "");
     var conditionStatusHandlerURL = runtime.handlerUrl(element, "condition_status_handler")
 
+
     // function scrollPage(target) {
     //     if (target.length) {
     //     // Only prevent default if animation is actually gonna happen
@@ -56,6 +57,8 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
+        var passed_test = false 
+        
         $.ajax({
           type: "POST",
           url: conditionStatusHandlerURL,
