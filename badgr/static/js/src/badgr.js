@@ -3,11 +3,6 @@ function BadgrXBlock(runtime, element, data) {
   console.log("INFO In BadgrXBlock.. the runtime is: " + JSON.stringify(runtime.keys))
   console.log("INFO IN BadgrXBlock.. the data is: " + JSON.stringify(data))
     var user = data.user;
-    var my_url =
-        "/api/grades/v1/course_grade/" +
-        data.course_id +
-        "/users/?username=" +
-        user;
     var my_url = "https://learn.firstcontactcrypto.com/api/grades/v1/subsection/" + data.course_id + "/?user_id=" + user.id
     var section_title = data.section_title;
     var pass_mark = data.pass_mark;
@@ -128,17 +123,18 @@ function BadgrXBlock(runtime, element, data) {
         event.stopImmediatePropagation();
         $("#lean_overlay").show();
         $(".badge-loader").show();
-        $.ajax({
-            type: "GET",
-            url: my_url,
-            success: function(data, status, xhr) {
-                getGrades(data)
-                console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
-            },
-            error: function(xhr, errmsg, err) {
-              console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
-            }
-        });
+        getGrades(data);
+    //     $.ajax({
+    //         type: "GET",
+    //         url: my_url,
+    //         success: function(data, status, xhr) {
+    //             getGrades(data)
+    //             console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
+    //         },
+    //         error: function(xhr, errmsg, err) {
+    //           console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
+    //         }
+    //     });
     });
 
 }
