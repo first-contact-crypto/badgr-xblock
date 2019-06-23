@@ -57,8 +57,9 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
-        var passed_test = false 
-        
+        var passed_test = false
+        var error_state = false
+
         $.ajax({
           type: "POST",
           url: conditionStatusHandlerURL,
@@ -80,6 +81,7 @@ function BadgrXBlock(runtime, element, data) {
                     // Just reload the page, the correct html with the badge will be displayed
                     var onlyUrl = location.href.replace(location.search, "");
                     window.location = onlyUrl;
+                    console.log("SUCCESS In getGrades.. (handlerUrl)" + xhr.status + ": " + xhr.responseText);
                     return false;
                 },
                 error: function (xhr, errmsg, err) {
@@ -94,30 +96,33 @@ function BadgrXBlock(runtime, element, data) {
                         " does not exist. Please contact your support administrator." +
                         "</div>"
                     ); // add the error to the dom
-                    console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
+                    console.log("ERROR In getGrades.. (handlerUrl)" + xhr.status + ": " + xhr.responseText);
+                    error_state = true
                 }
             });
         } else {
-            $.ajax({
-                type: "POST",
-                url: noAwardUrl,
-                data: JSON.stringify({ name: "badgr" }),
-                success: function (json) {
-                    $(".badge-loader").hide();
-                    $("#lean_overlay").hide();
-                    var $motivation = $(
-                        '<p class="badgr-motivation">' + motivation_message + "</p>"
-                    );
-                    $(".badgr_block").append($motivation);
-                    $("#check-for-badge").remove();
-                },
-                error: function(xhr, status, error) {
-                  console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
-                }
-            });
+            if (error_state === false) {
+                $.ajax({
+                    type: "POST",
+                    url: noAwardUrl,
+                    data: JSON.stringify({ name: "badgr" }),
+                    success: function (json) {
+                        $(".badge-loader").hide();
+                        $("#lean_overlay").hide();
+                        var $motivation = $(
+                            '<p class="badgr-motivation">' + motivation_message + "</p>"
+                        );
+                        $(".badgr_block").append($motivation);
+                        $("#check-for-badge").remove();
+                        console.log("SUCCESS In getGrades.. (handlerUrl)" + xhr.status + ": " + xhr.responseText);
+                    },
+                    error: function(xhr, status, error) {
+                    console.log("ERROR In getGrades.. (noAwardUrl)" + xhr.status + ": " + xhr.responseText);
+                    }
+                });
+            }
         }
     }
-
     $("#check-for-badge").click(function (event) {
         event.preventDefault();
         event.stopImmediatePropagation();
@@ -126,9 +131,12 @@ function BadgrXBlock(runtime, element, data) {
         $.ajax({
             type: "GET",
             url: my_url,
-            success: getGrades(data),
-            error: function (xhr, errmsg, err) {
-              console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
+            success: function(data, status, xhr) {
+                getGrades(data)
+                console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
+            },
+            error: function(xhr, errmsg, err) {
+              console.log("SUCCESS In getGrades.. (my_url)" + xhr.status + ": " + xhr.responseText);
             }
         });
     });

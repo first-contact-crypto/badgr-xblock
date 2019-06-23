@@ -56,7 +56,7 @@ from opaque_keys import InvalidKeyError
 
 
 ISSUER_ID = 'MC67oN42TPm9VARGW7TmKw'
-GRADE_THRESHOLD = 70
+
 
 def load(path):
     """Handy helper for getting resources from our kit."""
@@ -375,17 +375,17 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             percentage = (correct / total) * 100
 
             if self.operator == 'eq':
-                result = percentage == GRADE_THRESHOLD
+                result = percentage == self.pass_mark
             if self.operator == 'noeq':
-                result = percentage != GRADE_THRESHOLD
+                result = percentage != self.pass_mark
             if self.operator == 'lte':
-                result = percentage <= GRADE_THRESHOLD
+                result = percentage <= self.pass_mark
             if self.operator == 'gte':
-                result = percentage >= GRADE_THRESHOLD
+                result = percentage >= self.pass_mark
             if self.operator == 'lt':
-                result = percentage < GRADE_THRESHOLD
+                result = percentage < self.pass_mark
             if self.operator == 'gt':
-                result = percentage > GRADE_THRESHOLD
+                result = percentage > self.pass_mark
 
         return result
 
@@ -422,11 +422,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     @property
     def problem_id(self):
+        logger.info("In new_award_badge.. the data is {}".format(data))
         return self.section_title
 
 
     @property
     def list_of_problems(self): 
+        logger.info("In new_award_badge.. the data is {}".format(data))
         problems = re.split('\s*,*|\s*,\s*', self.problem_id)
         filter(None, problems)
         num_problems = len(problems)
@@ -451,11 +453,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 }
             },
         """
+        logger.info("In api_url.. the data is {}".format(data))
         return self.get_xblock_settings().get('BADGR_BASE_URL' '')
 
 
     @property
     def current_user_key(self):
+        logger.info("In current_user_key.. the data is {}".format(data))
         user = self.runtime.service(self, 'user').get_current_user()
         # We may be in the SDK, in which case the username may not really be available.
         return user.opt_attrs.get('edx-platform.username', 'username')
@@ -467,6 +471,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The json handler which uses the badge service to deal with no
         badge being earned.
         """
+        logger.info("In no_award_received.. the data is {}".format(data))
         self.received_award = False
         self.check_earned = True
 
@@ -532,19 +537,24 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.json_handler
     def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
         """  Returns the actual condition state  """
+        logger.info("In condition_status_handler.. the data is {}".format(data))
+
         return {'status': self.get_condition_status()}
 
 
     def get_course_problems_usage_key_list(self):
+        logger.info("In get_course_problems_usage_key_list.. the data is {}".format(data))
         return StudentModule.objects.filter(course_id__exact=self.course_id, grade__isnull=False,module_type__exact="problem").values('module_state_key')
 
         
     def get_this_parents_children(self):
+        logger.info("In get_this_parents_children.. the data is {}".format(data))
         return self.get_parent().get_children()
         # return {"parent_name": parent.name, "children": "children.list"}
 
 
     def condition_on_problem_list(self, problems):
+        logger.info("In condition_on_problem_list.. the data is {}".format(data))
         """ Returns the score for a list of problems """
         # pylint: disable=no-member
         user_id = self.xmodule_runtime.user_id
@@ -578,7 +588,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 return {'correct': correct_default, 'total': total_default}
             else:
                 return {'correct': score.correct, 'total': score.total}
-
         def _calculate_correct(first_score, second_score):
             correct = first_score['correct'] + second_score['correct']
             return {'correct': correct}
@@ -596,13 +605,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](
                 self,
                 problems_to_answer)
-
             return evaluation
-
         reducible_scores = map(_to_reducible, scores)
         correct = reduce(_calculate_correct, reducible_scores, correct_neutral)
         total = reduce(_calculate_total, reducible_scores, total_neutral)
-
         return self.compare_scores(correct['correct'], total['total'])
 
 
@@ -634,6 +640,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def resource_string(self, path):
         """Handy helper for getting resources from our kit."""
+        logger.info("In resource_string.. the data is {}".format(data))
         data = pkg_resources.resource_string(__name__, path)
         return data.decode("utf8")
 
@@ -644,6 +651,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         The primary view of the BadgrXBlock, shown to students
         when viewing courses.
         """
+        logger.info("In student_view.. the data is {}".format(data))
         if self.runtime.get_real_user is not None:
             user = self.runtime.get_real_user(
                 self.runtime.anonymous_student_id)
@@ -675,7 +683,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             'badgrApiToken': "not_needed_??",
             'badge_slug': self.badge_slug
         })
-
         return frag
 
 
@@ -683,6 +690,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """
         Render a form for editing this XBlock
         """
+        logger.info("In studio_view.. the data is {}".format(data))
         frag = Fragment()
         context = {'fields': []}
         # Build a list of all the fields that can be edited:
@@ -710,6 +718,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     # workbench while developing your XBlock.
     @staticmethod
     def workbench_scenarios():
+        logger.info("In workbench_scenarios.. the data is {}".format(data))
         """A canned scenario for display in the workbench."""
         return [
             ("BadgrXBlock",
