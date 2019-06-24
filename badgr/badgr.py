@@ -337,6 +337,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     def get_location_string(self, locator, is_draft=False):
         """  Returns the location string for one problem, given its id  """
         # pylint: disable=no-member
+
+
+        if type(locator) == type([]):
+            locator = locator[0]
+        if len(locator) == 0:
+
         logger.info("In get_location_string..")
 
         course_prefix = 'course'
