@@ -342,9 +342,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         if type(locator) == type([]):
             locator = locator[0]
         if len(locator) == 0:
-
+            return ""
         logger.info("In get_location_string..")
-
+    
         course_prefix = 'course'
         resource = 'problem'
         course_url = unicode(self.course_id)
