@@ -372,16 +372,20 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         self.list_of_problems
         self.operator = "gte"                                       
         if self.problem_id and self.condition == 'single_problem':
+            logger.info("NUMBER 1")
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
         if self.list_of_problems and self.condition == 'average_problems':
+            logger.info("NUMBER 2")
             # now split list of problems id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
             problems = filter(None, problems)
         if problems:
+            logger.info("NUMBER 3")
             condition_reached = self.condition_on_problem_list(problems)
+
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
 
@@ -628,10 +632,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         scores = map(scores_client.get, usages_keys)
         scores = filter(None, scores)
         problems_to_answer = [score.total for score in scores]
+
         if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
-            evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](
-                self,
-                problems_to_answer)
+            evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](self, problems_to_answer)
+            logger.info("WTF: In condition_on_problem_list.. the evaluation is: {}".format(evaluation)
+
             return evaluation
         reducible_scores = map(_to_reducible, scores)
         correct = reduce(_calculate_correct, reducible_scores, correct_neutral)
