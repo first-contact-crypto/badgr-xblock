@@ -379,7 +379,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = filter(None, problems)
             problems = problems[:1]
             if len(problems) != 32:
-                logger.info("1111111111")
+                logger.info("1111111111 problems list len: {} {}".format(len(problems), problems)
                 return None 
         elif self.list_of_problems and self.condition == 'average_problems':
             logger.info("NUMBER 2.. self.list_of_problems is: {}".format(self.list_of_problems))
