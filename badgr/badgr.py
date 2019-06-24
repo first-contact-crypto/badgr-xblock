@@ -389,9 +389,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             # now split list of problems id by spaces or commas
             problems = [re.split('\s*,*|\s*,\s*', x) for x in self.list_of_problems]
             np = []
-            # [np.append(p) for p in problems if p != "" or p != u'' or p != [u'']]
+            # [np.append(p) for p in problems if p != "" and p != u'' and p != [u'']]
             for p in problems:
-                if p != '' or p != u'' or p != [u'']:
+                if p != '' and p != u'' and p != [u'']:
                     logger.info("In get_condition_status.. keeping: {}".format(p))
                     np.append(p)
             problems = np
@@ -404,7 +404,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         ret = []
         for p in problems:
-            if p != "" or p != u'' or p != [u'']:
+            if p != "" and p != u'' and p != [u'']:
                 logger.info("In get_condition_status.. keeping: {}".format(p))
                 ret.append(p)
             else:
