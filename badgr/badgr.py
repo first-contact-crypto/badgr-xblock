@@ -396,8 +396,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         else:
             condition_reached = None
 
+        ret = []
+        while "" in problems:
+            [ret.append(p) for p in problems is p != ""]
+
         if problems:
-            logger.info("NUMBER 3")
+            logger.info("NUMBER 3 .. problems: {}".format(problems))
+
             condition_reached = self.condition_on_problem_list(problems)
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
@@ -598,7 +603,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     def condition_on_problem_list(self, problems):
-        logger.info("In condition_on_problem_list..")
+        logger.info("In condition_on_problem_list.. (input) problems: {}".format(problems))
         """ Returns the score for a list of problems """
         # pylint: disable=no-member
         user_id = self.xmodule_runtime.user_id
