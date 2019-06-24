@@ -783,7 +783,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
 
-Ko3mDsSppuT3nPRikcqoTnbgGQobtT
+
 
 
 
