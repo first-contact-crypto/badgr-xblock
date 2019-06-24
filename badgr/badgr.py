@@ -382,7 +382,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = filter(None, problems)
         if problems:
             condition_reached = self.condition_on_problem_list(problems)
-
+        logger.info("In get_condition_status.. the condition \"correct\" is: {} \"total\" is: {}".format(condition_reached[0], condition_reached[1]))
         return condition_reached
 
     def compare_scores(self, correct, total):
@@ -448,8 +448,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     @property
     def problem_id(self):
-        logger.info("In problem_id..")
-
         logger.info("In problem_id..")
         return self.section_title
 
