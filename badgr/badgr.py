@@ -317,21 +317,21 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     #     return '7glaAeNOPG2PgxTtHpihGpSCJSj1Df'
 
 
-    def validate_field_data(self, validation, data):
-        """
-        Validate this block's field data
-        """
-        logger.info("In validate_field_data..")
+    # def validate_field_data(self, validation, data):
+    #     """
+    #     Validate this block's field data
+    #     """
+    #     logger.info("In validate_field_data..")
 
-        if data.tab_to <= 0:
-            validation.add(ValidationMessage(
-                ValidationMessage.ERROR,
-                u"Tab to redirect to must be greater than zero"))
-        if data.ref_value < 0 or data.ref_value > 100:
-            validation.add(ValidationMessage(
-                ValidationMessage.ERROR,
-                u"Score percentage field must "
-                u"be an integer number between 0 and 100"))
+    #     if data.tab_to <= 0:
+    #         validation.add(ValidationMessage(
+    #             ValidationMessage.ERROR,
+    #             u"Tab to redirect to must be greater than zero"))
+    #     if data.ref_value < 0 or data.ref_value > 100:
+    #         validation.add(ValidationMessage(
+    #             ValidationMessage.ERROR,
+    #             u"Score percentage field must "
+    #             u"be an integer number between 0 and 100"))
 
 
     def get_location_string(self, locator, is_draft=False):
@@ -358,6 +358,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 type=self.course_id.BLOCK_TYPE_PREFIX,
                 type_id=resource,
                 locator=locator)
+        logger.info("In get_location_string.. the location string is: {}".format(location_string))
 
         return location_string
 
