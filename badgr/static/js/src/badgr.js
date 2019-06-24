@@ -80,10 +80,10 @@ function BadgrXBlock(runtime, element, data) {
             data.status
         );
         if (data.status === null) {
-          $(".badge-loader").hide();
-          $("#lean_overlay").hide();
-          return; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and
-          // nothing happens
+          return; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
+        } else {
+          $("#lean_overlay").show();
+          $(".badge-loader").show();
         }
         passed_test = data.status;
       },
@@ -107,7 +107,10 @@ function BadgrXBlock(runtime, element, data) {
         data: JSON.stringify({ name: "badgr" }),
         success: function(json) {
           // Just reload the page, the correct html with the badge will be displayed
-          var onlyUrl = location.href.replace(location.search, "#"+self.section_title);
+          var onlyUrl = location.href.replace(
+            location.search,
+            "#" + self.section_title
+          );
           window.location = onlyUrl;
           console.log("SUCCESS In getGrades.. (handlerUrl)");
           return false;
@@ -164,8 +167,6 @@ function BadgrXBlock(runtime, element, data) {
   $("#check-for-badge").click(function(event) {
     event.preventDefault();
     event.stopImmediatePropagation();
-    $("#lean_overlay").show();
-    $(".badge-loader").show();
     getGrades(data);
     // $.ajax({
     //     type: "GET",
