@@ -384,6 +384,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             logger.info("NUMBER 2.. self.list_of_problems is: {}".format(self.list_of_problems))
             # now split list of problems id by spaces or commas
             problems = [re.split('\s*,*|\s*,\s*', x) for x in self.list_of_problems]
+            while ("" in problems) {
+                problems.remove("")
+            }
             problems = filter(None, problems)
             ret = [len(x) == 32 for x in problems]
             if False in ret:

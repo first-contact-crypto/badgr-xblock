@@ -68,6 +68,7 @@ function BadgrXBlock(runtime, element, data) {
     var passed_test = null;
     var error_state = false;
     var incomplete_state = false;
+    var abort = null
 
     $.ajax({
       type: "POST",
@@ -80,10 +81,11 @@ function BadgrXBlock(runtime, element, data) {
             data.status
         );
         if (data.status === null) {
-          return; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
+          abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
         } else {
           $("#lean_overlay").show();
           $(".badge-loader").show();
+          abort = false
         }
         passed_test = data.status;
       },
@@ -94,13 +96,19 @@ function BadgrXBlock(runtime, element, data) {
             ": " +
             xhr.responseText
         );
-        error_state = true;
+        abort = false
       }
     });
-    while (passed_test === null) {
-      sleep(500);
+    while (abort === null) {
+        sleep(500)
     }
-    if (passed_test && error_state === false) {
+    if (!abort) {
+        while (abort === false && passed_test === null) {
+            sleep(500);
+        }
+    }
+
+    if (!abort && passed_test && error_state === false) {
       $.ajax({
         type: "POST",
         url: handlerUrl,
@@ -137,7 +145,7 @@ function BadgrXBlock(runtime, element, data) {
         }
       });
     } else {
-      if (error_state === false) {
+      if (error_state === false && abort === false) {
         $.ajax({
           type: "POST",
           url: noAwardUrl,
