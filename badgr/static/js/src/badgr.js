@@ -60,6 +60,7 @@ function BadgrXBlock(runtime, element, data) {
 
         var passed_test = null 
         var error_state = false
+        var incomplete_state = false
 
         $.ajax({
           type: "POST",
@@ -68,6 +69,10 @@ function BadgrXBlock(runtime, element, data) {
           async: false,
           success: function(data) {
             console.log("SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status)
+            if (data.status === null) {
+                return                      // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and 
+                                            // nothing happens
+            }
             passed_test = data.status
           },
           error: function(xhr, status, error) {

@@ -378,15 +378,16 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
-        if self.list_of_problems and self.condition == 'average_problems':
+        elif self.list_of_problems and self.condition == 'average_problems':
             logger.info("NUMBER 2")
             # now split list of problems id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
             problems = filter(None, problems)
-        if problems:
+        elif problems:
             logger.info("NUMBER 3")
             condition_reached = self.condition_on_problem_list(problems)
-
+        else:
+            condition_reached = None
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
 
