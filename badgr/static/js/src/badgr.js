@@ -68,7 +68,7 @@ function BadgrXBlock(runtime, element, data) {
     var passed_test = null;
     var error_state = false;
     var incomplete_state = false;
-    var abort = null
+    var abort = null;
 
     $.ajax({
       type: "POST",
@@ -85,7 +85,7 @@ function BadgrXBlock(runtime, element, data) {
         } else {
           $("#lean_overlay").show();
           $(".badge-loader").show();
-          abort = false
+          abort = false;
         }
         passed_test = data.status;
       },
@@ -96,16 +96,16 @@ function BadgrXBlock(runtime, element, data) {
             ": " +
             xhr.responseText
         );
-        abort = false
+        abort = false;
       }
     });
     while (abort === null) {
-        sleep(500)
+      sleep(500);
     }
     if (!abort) {
-        while (abort === false && passed_test === null) {
-            sleep(500);
-        }
+      while (abort === false && passed_test === null) {
+        sleep(500);
+      }
     }
 
     if (!abort && passed_test && error_state === false) {
@@ -135,6 +135,7 @@ function BadgrXBlock(runtime, element, data) {
               " does not exist. Please contact your support administrator." +
               "</div>"
           ); // add the error to the dom
+          location.href.replace(location.search, "#" + self.section_title);
           console.log(
             "ERROR In getGrades.. (handlerUrl)" +
               xhr.status +
@@ -158,6 +159,7 @@ function BadgrXBlock(runtime, element, data) {
             );
             $(".badgr_block").append($motivation);
             $("#check-for-badge").remove();
+            location.href.replace(location.search, "#" + self.section_title);
             console.log("SUCCESS In getGrades.. (noAwardUrl)");
           },
           error: function(xhr, msg, error) {
@@ -169,6 +171,8 @@ function BadgrXBlock(runtime, element, data) {
             );
           }
         });
+      } else if (error_state === false && abort === true) {
+        location.href.replace(location.search, "#");
       }
     }
   }
