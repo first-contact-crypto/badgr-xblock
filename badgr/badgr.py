@@ -392,6 +392,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             # [np.append(p) for p in problems if p != "" or p != u'' or p != [u'']]
             for p in problems:
                 if p != '' or p != u'' or p != [u'']:
+                    logger.info("In get_condition_status.. keeping: {}".format(p))
                     np.append(p)
             problems = np
             logger.info("In get_condition_status.. the problems are: {}".format(problems))
@@ -402,9 +403,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = problems[0]
 
         ret = []
-        [ret.append(p) for p in problems if p != "" or p != u'']
         for p in problems:
             if p != "" or p != u'' or p != [u'']:
+                logger.info("In get_condition_status.. keeping: {}".format(p))
                 ret.append(p)
             else:
                 logger.info("In get_condition_status.. discarding from problems list: {}".format(p))
