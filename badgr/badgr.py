@@ -367,6 +367,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         logger.info("In get_condition_status..")
 
+        if (self.problem_id)
+
         condition_reached = False
         problems = []
         # hack to initialize condition and operator variables
