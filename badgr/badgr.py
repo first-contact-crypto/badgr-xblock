@@ -405,7 +405,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         [ret.append(p) for p in problems if p != "" or p != u'']
         for p in problems:
             if p != "" or p != u'' or p != [u'']:
-                ret.appearing(p)
+                ret.append(p)
             else:
                 logger.info("In get_condition_status.. discarding from problems list: {}".format(p))
 
