@@ -107,7 +107,7 @@ function BadgrXBlock(runtime, element, data) {
         data: JSON.stringify({ name: "badgr" }),
         success: function(json) {
           // Just reload the page, the correct html with the badge will be displayed
-          var onlyUrl = location.href.replace(location.search, "");
+          var onlyUrl = location.href.replace(location.search, "#"+self.section_title);
           window.location = onlyUrl;
           console.log("SUCCESS In getGrades.. (handlerUrl)");
           return false;
