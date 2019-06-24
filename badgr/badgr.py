@@ -382,7 +382,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = filter(None, problems)
         if problems:
             condition_reached = self.condition_on_problem_list(problems)
-        logger.info("In get_condition_status.. the condition \"correct\" is: {} \"total\" is: {}".format(condition_reached[0], condition_reached[1]))
+        logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
 
     def compare_scores(self, correct, total):
