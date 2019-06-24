@@ -391,7 +391,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
     def compare_scores(self, correct, total):
         """  Returns the result of comparison using custom operator """
-        logger.info("In compare_scores..")
 
         result = False
         if total:
@@ -410,7 +409,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 result = percentage < self.pass_mark
             if self.operator == 'gt':
                 result = percentage > self.pass_mark
-
+        logger.info("In compare_scores.. the result is: {}".format(result))
         return result
 
     def are_all_not_null(self, problems_to_answer):
@@ -635,7 +634,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
             evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](self, problems_to_answer)
-            logger.info("WTF: In condition_on_problem_list.. the evaluation is: {}".format(evaluation)
+            logger.info("WTF: In condition_on_problem_list.. the evaluation is: {}".format(evaluation))
 
             return evaluation
         reducible_scores = map(_to_reducible, scores)
