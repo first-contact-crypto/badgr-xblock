@@ -636,6 +636,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         reducible_scores = map(_to_reducible, scores)
         correct = reduce(_calculate_correct, reducible_scores, correct_neutral)
         total = reduce(_calculate_total, reducible_scores, total_neutral)
+        logger.info("HERE: In condition_on_problem_list.. the total is: {} the correct is: {}".format(total['total'], correct['correct']))
         return self.compare_scores(correct['correct'], total['total'])
 
 
