@@ -60,10 +60,12 @@ function BadgrXBlock(runtime, element, data) {
           url: conditionStatusHandlerURL,
           data: JSON.stringify({"blah":"blah"}),
           success: function(data) {
+            console.log("SUCCESS In getGrades.. (conditionStatusHandlerURL)");
+
             passed_test = data.status
           },
           error: function(xhr, status, error) {
-            console.log("INFO In getGrades.. " + xhr.status + ": " + xhr.responseText);
+            console.log("INFO In getGrades.. (conditionStatusHandlerURL)" + xhr.status + ": " + xhr.responseText);
           }
         })
 
@@ -76,7 +78,7 @@ function BadgrXBlock(runtime, element, data) {
                     // Just reload the page, the correct html with the badge will be displayed
                     var onlyUrl = location.href.replace(location.search, "");
                     window.location = onlyUrl;
-                    console.log("SUCCESS In getGrades.. (handlerUrl)" + xhr.status + ": " + xhr.responseText);
+                    console.log("SUCCESS In getGrades.. (handlerUrl)");
                     return false;
                 },
                 error: function (xhr, errmsg, err) {
@@ -109,9 +111,9 @@ function BadgrXBlock(runtime, element, data) {
                         );
                         $(".badgr_block").append($motivation);
                         $("#check-for-badge").remove();
-                        console.log("SUCCESS In getGrades.. (handlerUrl)" + xhr.status + ": " + xhr.responseText);
+                        console.log("SUCCESS In getGrades.. (noAwardUrl)");
                     },
-                    error: function(xhr, status, error) {
+                    error: function(xhr, msg, error) {
                     console.log("ERROR In getGrades.. (noAwardUrl)" + xhr.status + ": " + xhr.responseText);
                     }
                 });
