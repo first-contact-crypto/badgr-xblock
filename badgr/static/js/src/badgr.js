@@ -43,6 +43,12 @@ function BadgrXBlock(runtime, element, data) {
     //     }
     // }
 
+    const sleep = milliseconds => {
+      console.log("INFO In SLEEP.. sleeping for " + milliseconds + " millis")
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    };
+
+
     function getGrades(data) {
         // * original_grade: An object representation of a users original grade containing:
         //     * earned_all: The float score a user earned for all graded and not graded problems
@@ -52,24 +58,27 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. the data is: " + JSON.stringify(data))
 
-        var passed_test = false
+        var passed_test = null 
         var error_state = false
 
         $.ajax({
           type: "POST",
           url: conditionStatusHandlerURL,
           data: JSON.stringify({"blah":"blah"}),
+          async: false,
           success: function(data) {
-            console.log("SUCCESS In getGrades.. (conditionStatusHandlerURL)");
-
+            console.log("SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status)
             passed_test = data.status
           },
           error: function(xhr, status, error) {
-            console.log("INFO In getGrades.. (conditionStatusHandlerURL)" + xhr.status + ": " + xhr.responseText);
+            console.log("ERROR In getGrades.. (conditionStatusHandlerURL)" + xhr.status + ": " + xhr.responseText);
+            error_state = true 
           }
         })
-
-        if (passed_test) {
+        while (passed_test === null) {
+            sleep(500)
+        }
+        if (passed_test && error_state === false) {
             $.ajax({
                 type: "POST",
                 url: handlerUrl,
