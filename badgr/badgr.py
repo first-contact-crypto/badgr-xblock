@@ -367,8 +367,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         logger.info("In get_condition_status..")
 
-        if (self.problem_id)
-
         condition_reached = False
         problems = []
         # hack to initialize condition and operator variables
@@ -380,16 +378,23 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
+            if len(problems) != 32:
+                return None 
         elif self.list_of_problems and self.condition == 'average_problems':
             logger.info("NUMBER 2")
             # now split list of problems id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.list_of_problems)
             problems = filter(None, problems)
-        elif problems:
-            logger.info("NUMBER 3")
-            condition_reached = self.condition_on_problem_list(problems)
+            ret = [len(x) == 32 for x in problems]
+            if False in ret:
+                return None 
         else:
             condition_reached = None
+            
+        if problems:
+            logger.info("NUMBER 3")
+            condition_reached = self.condition_on_problem_list(problems)
+
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
 
