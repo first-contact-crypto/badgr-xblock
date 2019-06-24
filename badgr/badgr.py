@@ -397,8 +397,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = None
 
         ret = []
-        while "" in problems:
-            [ret.append(p) for p in problems is p != ""]
+        [ret.append(p) for p in problems if p != "" or p != u'']
+        problems = ret
 
         if problems:
             logger.info("NUMBER 3 .. problems: {}".format(problems))
