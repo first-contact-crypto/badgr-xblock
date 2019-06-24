@@ -397,6 +397,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = None
         if type(problems[0]) == type([]):
             problems = problems[0]
+            
         ret = []
         [ret.append(p) for p in problems if p != "" or p != u'']
         problems = ret
