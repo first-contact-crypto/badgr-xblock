@@ -378,7 +378,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             problems = filter(None, problems)
             problems = problems[:1]
-            if len(problems) != 32:
+            if len(problems[0]) != 32:
                 logger.info("1111111111 problems list len: {} {}".format(len(problems), problems))
                 return None 
         elif self.list_of_problems and self.condition == 'average_problems':
