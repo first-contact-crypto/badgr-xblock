@@ -381,17 +381,20 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         self.list_of_problems
         self.operator = "gte" 
         if self.problem_id and self.condition == 'single_problem':
-            logger.info("NUMBER 1")
+            
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
             num_problems = len(problems)
             problems = filter(None, problems)
 
             problems = problems[:1]
+            logger.info("NUMBER 1 .. problems: {}".format(problems))
+
         elif self.list_of_problems and self.condition == 'average_problems':
             logger.info("NUMBER 2.. self.list_of_problems is: {}".format(self.list_of_problems))
             # now split list of problems id by spaces or commas
             problems = [re.split('\s*,*|\s*,\s*', x) for x in self.list_of_problems]
+
             num_problems = len(problems)
             np = []
             # [np.append(p) for p in problems if p != "" and p != u'' and p != [u'']]
@@ -403,6 +406,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
             logger.info("In get_condition_status.. the problems are: {}".format(problems))
             problems = filter(None, problems)
+            logger.info("NUMBER 2.. problems: {}".format(self.list_of_problems))
+
 
         else:
             condition_reached = None
@@ -420,12 +425,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         problems = ret
 
         if problems:
-            logger.info("NUMBER 3 .. problems: {}".format(problems))
+            logger.info("In get_condition_status.. problems (final): {}".format(problems))
 
             condition_reached = self.condition_on_problem_list(problems)
 
         if self.condition == 'average_problems' and len(problems) != 10:
             self.quizzes_complete = False
+            logger.info("In get_condition_status.. self.quizzes_complete is: {}".format(self.quizzes_complete))
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
