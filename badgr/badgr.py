@@ -375,19 +375,23 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         condition_reached = False
         problems = []
+        num_problems = 0
         # hack to initialize condition and operator variables
         self.list_of_problems
-        self.operator = "gte"                                       
+        self.operator = "gte" 
         if self.problem_id and self.condition == 'single_problem':
             logger.info("NUMBER 1")
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
+            num_problems = len(problems)
             problems = filter(None, problems)
+
             problems = problems[:1]
         elif self.list_of_problems and self.condition == 'average_problems':
             logger.info("NUMBER 2.. self.list_of_problems is: {}".format(self.list_of_problems))
             # now split list of problems id by spaces or commas
             problems = [re.split('\s*,*|\s*,\s*', x) for x in self.list_of_problems]
+            num_problems = len(problems)
             np = []
             # [np.append(p) for p in problems if p != "" and p != u'' and p != [u'']]
             for p in problems:
@@ -395,8 +399,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                     logger.info("In get_condition_status.. keeping: {}".format(p))
                     np.append(p)
             problems = np
+
             logger.info("In get_condition_status.. the problems are: {}".format(problems))
             problems = filter(None, problems)
+
         else:
             condition_reached = None
         if type(problems[0]) == type([]):
@@ -417,6 +423,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
             condition_reached = self.condition_on_problem_list(problems)
 
+        if self.condition == 'average_problems' and condition_reached == True and len(problems) != num_problems:
+            condition_reached = False
+            
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
 
