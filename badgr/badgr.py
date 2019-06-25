@@ -299,7 +299,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     show_in_read_only_mode = True
-    quizzes_complete = False
+    quizzes_complete = True
     # apitoken = None
 
 
@@ -425,9 +425,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = self.condition_on_problem_list(problems)
 
         if self.condition == 'average_problems' and condition_reached == True and len(problems) != num_problems:
-            condition_reached = False
-
-        self.quizzes_complete = num_problems - len(problems) == 0
+            self.quizzes_complete = False
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
