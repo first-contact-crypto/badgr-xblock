@@ -159,7 +159,7 @@ function BadgrXBlock(runtime, element, data) {
             );
             $(".badgr_block").append($motivation);
             $("#check-for-badge").remove();
-            location.href.replace(location.search, "#" + self.section_title);
+            location.href.replace(location.search, "#lean_overlay");
             console.log("SUCCESS In getGrades.. (noAwardUrl)");
           },
           error: function(xhr, msg, error) {

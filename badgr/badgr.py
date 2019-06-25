@@ -424,7 +424,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
             condition_reached = self.condition_on_problem_list(problems)
 
-        if self.condition == 'average_problems' and condition_reached == True and len(problems) != num_problems:
+        if self.condition == 'average_problems' and len(problems) != 10:
             self.quizzes_complete = False
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
