@@ -177,7 +177,7 @@ function BadgrXBlock(runtime, element, data) {
         });
       } else if (error_state === false && abort === true) {
         console.log("INFO In getGrades.. error_state === false && abort === true")
-        location.reload(true);
+        // location.reload(true);
       }
     }
   }
