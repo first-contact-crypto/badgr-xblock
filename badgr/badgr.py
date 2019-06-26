@@ -696,10 +696,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         if self.SPECIAL_COMPARISON_DISPATCHER['has_null'](self, problems_to_answer) == False:
-            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(True)
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(True))
             self.abort = True
         else:
-            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(False)
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(False))
             self.abort = False
 
         
