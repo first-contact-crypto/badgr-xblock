@@ -373,7 +373,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         """  Returns the current condition status  """
         logger.info("In get_condition_status..")
 
-        condition_reached = False
+        condition_reached = True
         problems = []
         num_problems = 0
         # hack to initialize condition and operator variables
@@ -426,10 +426,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         if problems:
             logger.info("In get_condition_status.. problems (final): {}".format(problems))
-
             condition_reached = self.condition_on_problem_list(problems)
+
+
         logger.info("INFO In get_condition_status.. self.condition is: {} and len(problems) is {}".format(self.condition, len(problems)))
-        if self.condition == 'average_problems' and len(problems) != 10:
+        if len(problems) < num_problems:
             condition_reached = None 
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
