@@ -299,7 +299,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     show_in_read_only_mode = True
-    quizzes_complete = True
     # apitoken = None
 
 
@@ -431,8 +430,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = self.condition_on_problem_list(problems)
         logger.info("INFO In get_condition_status.. self.condition is: {} and len(problems) is {}".format(self.condition, len(problems)))
         if self.condition == 'average_problems' and len(problems) != 10:
-            self.quizzes_complete = False
-            logger.info("In get_condition_status.. self.quizzes_complete is: {}".format(self.quizzes_complete))
+            condition_reached = None 
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
@@ -615,12 +613,9 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.json_handler
     def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
         """  Returns the actual condition state  """
-        logger.info("In condition_status_handler.. quizzes_complete: {}".format(quizzes_complete))
 
-        if self.quizzes_complete == False:
-            condition_status = None 
-        else:
-            condition_status = self.get_condition_status()
+
+        condition_status = self.get_condition_status()
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {}".format(condition_status))
         return {'status': condition_status }
 
