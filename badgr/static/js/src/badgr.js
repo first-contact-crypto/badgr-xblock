@@ -94,6 +94,74 @@ function BadgrXBlock(runtime, element, data) {
         else {
           passed_test = false;
         }
+
+        if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
+          $.ajax({
+            type: "POST",
+            url: handlerUrl,
+            // async: false,
+            data: JSON.stringify({ name: "badgr" }),
+            success: function(json) {
+              // Just reload the page, the correct html with the badge will be displayed
+              var onlyUrl = location.href.replace(
+                location.search,
+                "#" + self.section_title
+              );
+              window.location = onlyUrl;
+              console.log("SUCCESS In getGrades.. (handlerUrl)");
+              // return false;
+            },
+            error: function(xhr, errmsg, err) {
+              $(".badge-loader").hide();
+              $("#lean_overlay").hide();
+              $("#check-for-badge").remove();
+              $("#results").html(
+                "<div>Oops! We have encountered an error, the badge " +
+                  '"' +
+                  badge_slug +
+                  '"' +
+                  " does not exist. Please contact your support administrator." +
+                  "</div>"
+              ); // add the error to the dom
+              location.href.replace(location.search, "#" + self.section_title);
+              console.log(
+                "ERROR In getGrades.. (handlerUrl)" +
+                  xhr.status +
+                  ": " +
+                  xhr.responseText
+              );
+              error_state = true;
+            }
+          });
+        } else {
+          if (error_state === false && abort === false && mdata.check_earned === 'False') {
+            $.ajax({
+              type: "POST",
+              url: noAwardUrl,
+              // async: false,
+              data: JSON.stringify({ name: "badgr" }),
+              success: function(json) {
+                $(".badge-loader").hide();
+                $("#lean_overlay").hide();
+                var $motivation = $(
+                  '<p class="badgr-motivation">' + motivation_message + "</p>"
+                );
+                $(".badgr_block").append($motivation);
+                $("#check-for-badge").remove();
+                location.href.replace(location.search, "#lean_overlay");
+                console.log("SUCCESS In getGrades.. (noAwardUrl)");
+              },
+              error: function(xhr, msg, error) {
+                console.log(
+                  "ERROR In getGrades.. (noAwardUrl)" +
+                    xhr.status +
+                    ": " +
+                    xhr.responseText
+                );
+              }
+            });
+          } 
+        }
       },
       error: function(xhr, status, error) {
         console.log(
@@ -109,80 +177,80 @@ function BadgrXBlock(runtime, element, data) {
 
     console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
 
-    while (abort === null) {
-      sleep(500)
-    }
+    // while (abort === null) {
+    //   sleep(500)
+    // }
 
-    if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
-      $.ajax({
-        type: "POST",
-        url: handlerUrl,
-        // async: false,
-        data: JSON.stringify({ name: "badgr" }),
-        success: function(json) {
-          // Just reload the page, the correct html with the badge will be displayed
-          var onlyUrl = location.href.replace(
-            location.search,
-            "#" + self.section_title
-          );
-          window.location = onlyUrl;
-          console.log("SUCCESS In getGrades.. (handlerUrl)");
-          // return false;
-        },
-        error: function(xhr, errmsg, err) {
-          $(".badge-loader").hide();
-          $("#lean_overlay").hide();
-          $("#check-for-badge").remove();
-          $("#results").html(
-            "<div>Oops! We have encountered an error, the badge " +
-              '"' +
-              badge_slug +
-              '"' +
-              " does not exist. Please contact your support administrator." +
-              "</div>"
-          ); // add the error to the dom
-          location.href.replace(location.search, "#" + self.section_title);
-          console.log(
-            "ERROR In getGrades.. (handlerUrl)" +
-              xhr.status +
-              ": " +
-              xhr.responseText
-          );
-          error_state = true;
-        }
-      });
-    } else {
-      if (error_state === false && abort === false && mdata.check_earned === 'False') {
-        $.ajax({
-          type: "POST",
-          url: noAwardUrl,
-          // async: false,
-          data: JSON.stringify({ name: "badgr" }),
-          success: function(json) {
-            $(".badge-loader").hide();
-            $("#lean_overlay").hide();
-            var $motivation = $(
-              '<p class="badgr-motivation">' + motivation_message + "</p>"
-            );
-            $(".badgr_block").append($motivation);
-            $("#check-for-badge").remove();
-            location.href.replace(location.search, "#lean_overlay");
-            console.log("SUCCESS In getGrades.. (noAwardUrl)");
-          },
-          error: function(xhr, msg, error) {
-            console.log(
-              "ERROR In getGrades.. (noAwardUrl)" +
-                xhr.status +
-                ": " +
-                xhr.responseText
-            );
-          }
-        });
-      } else if (error_state === false && abort === true) {
-        console.log("INFO In getGrades.. error_state === false && abort === true")
-        // location.reload(true);
-      }
-    }
+    // if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
+    //   $.ajax({
+    //     type: "POST",
+    //     url: handlerUrl,
+    //     // async: false,
+    //     data: JSON.stringify({ name: "badgr" }),
+    //     success: function(json) {
+    //       // Just reload the page, the correct html with the badge will be displayed
+    //       var onlyUrl = location.href.replace(
+    //         location.search,
+    //         "#" + self.section_title
+    //       );
+    //       window.location = onlyUrl;
+    //       console.log("SUCCESS In getGrades.. (handlerUrl)");
+    //       // return false;
+    //     },
+    //     error: function(xhr, errmsg, err) {
+    //       $(".badge-loader").hide();
+    //       $("#lean_overlay").hide();
+    //       $("#check-for-badge").remove();
+    //       $("#results").html(
+    //         "<div>Oops! We have encountered an error, the badge " +
+    //           '"' +
+    //           badge_slug +
+    //           '"' +
+    //           " does not exist. Please contact your support administrator." +
+    //           "</div>"
+    //       ); // add the error to the dom
+    //       location.href.replace(location.search, "#" + self.section_title);
+    //       console.log(
+    //         "ERROR In getGrades.. (handlerUrl)" +
+    //           xhr.status +
+    //           ": " +
+    //           xhr.responseText
+    //       );
+    //       error_state = true;
+    //     }
+    //   });
+    // } else {
+    //   if (error_state === false && abort === false && mdata.check_earned === 'False') {
+    //     $.ajax({
+    //       type: "POST",
+    //       url: noAwardUrl,
+    //       // async: false,
+    //       data: JSON.stringify({ name: "badgr" }),
+    //       success: function(json) {
+    //         $(".badge-loader").hide();
+    //         $("#lean_overlay").hide();
+    //         var $motivation = $(
+    //           '<p class="badgr-motivation">' + motivation_message + "</p>"
+    //         );
+    //         $(".badgr_block").append($motivation);
+    //         $("#check-for-badge").remove();
+    //         location.href.replace(location.search, "#lean_overlay");
+    //         console.log("SUCCESS In getGrades.. (noAwardUrl)");
+    //       },
+    //       error: function(xhr, msg, error) {
+    //         console.log(
+    //           "ERROR In getGrades.. (noAwardUrl)" +
+    //             xhr.status +
+    //             ": " +
+    //             xhr.responseText
+    //         );
+    //       }
+    //     });
+    //   } else if (error_state === false && abort === true) {
+    //     console.log("INFO In getGrades.. error_state === false && abort === true")
+    //     // location.reload(true);
+    //   }
+    // }
   }
   $("#check-for-badge").click(function(event) {
     event.preventDefault();
