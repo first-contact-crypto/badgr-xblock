@@ -106,7 +106,7 @@ function BadgrXBlock(runtime, element, data) {
       }
     }
 
-    if (!abort && passed_test && error_state === false) {
+    if (abort === false && passed_test === true && error_state === false) {
       $.ajax({
         type: "POST",
         url: handlerUrl,
