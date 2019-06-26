@@ -75,7 +75,7 @@ function BadgrXBlock(runtime, element, data) {
       type: "POST",
       url: conditionStatusHandlerURL,
       data: JSON.stringify({ blah: "blah" }),
-      async: false,
+      // async: false,
       success: function(data) {
         console.log(
           "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " + data.abort);
@@ -109,11 +109,15 @@ function BadgrXBlock(runtime, element, data) {
 
     console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
 
+    while (abort === null) {
+      sleep(500)
+    }
+
     if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
       $.ajax({
         type: "POST",
         url: handlerUrl,
-        async: false,
+        // async: false,
         data: JSON.stringify({ name: "badgr" }),
         success: function(json) {
           // Just reload the page, the correct html with the badge will be displayed
@@ -152,7 +156,7 @@ function BadgrXBlock(runtime, element, data) {
         $.ajax({
           type: "POST",
           url: noAwardUrl,
-          async: false,
+          // async: false,
           data: JSON.stringify({ name: "badgr" }),
           success: function(json) {
             $(".badge-loader").hide();
