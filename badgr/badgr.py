@@ -410,7 +410,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         else:
-            logger.info("In get_condition_status.. I SHOULD NOT BE HERE... SHOULD I?)
+            logger.info("In get_condition_status.. I SHOULD NOT BE HERE... SHOULD I?")
             condition_reached = None
         if type(problems[0]) == type([]):
             problems = problems[0]
