@@ -67,7 +67,7 @@ function BadgrXBlock(runtime, element, data) {
 
     var passed_test = null;
     var error_state = false;
-    var incomplete_state = false;
+    // var incomplete_state = false;
     var abort = null;
 
     $.ajax({
@@ -78,15 +78,20 @@ function BadgrXBlock(runtime, element, data) {
       success: function(data) {
         console.log(
           "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " + data.abort);
-        if (data.abort === true) {
+        if (data.abort === "True") {
           abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
         } else {
           $("#lean_overlay").show();
           $(".badge-loader").show();
-          incomplete_state = true 
+          // incomplete_state = true 
           abort = false;
         }
-        passed_test = data.status;
+        if (data.status === "True") {
+          passed_test = true
+        }
+        else {
+          passed_test = false;
+        }
       },
       error: function(xhr, status, error) {
         console.log(

@@ -623,11 +623,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         abort = self.abort
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
         if abort == True:
-            return {'status': False, 'abort': True}
+            return {'status':'False', 'abort': 'True'}
         elif condition_status == True:
-            return {'status': True, 'abort': False}
+            return {'status': 'True', 'abort': 'False'}
         elif condition_status == False:
-            return {'status': False, 'abort': False}
+            return {'status': 'False', 'abort': 'False'}
 
 
 
