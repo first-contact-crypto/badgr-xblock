@@ -432,7 +432,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         logger.info("INFO In get_condition_status.. self.condition is: {} and len(problems) is {} and num_problems is: {}"
                 .format(self.condition, len(problems), num_problems))
         if len(problems) < num_problems:
-            condition_reached = None 
+            logger.info("In get_condition_status.. ABORT ABORT ABORT! len(problems): {} num_problems: {}".format(len(problems), num_problems))
+            condition_reached = "abort"
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
