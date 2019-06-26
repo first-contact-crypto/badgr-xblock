@@ -619,8 +619,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         condition_status = self.get_condition_status()
-        abort = None 
-        if condition_status == None:
+        abort = False 
+        if condition_status == 'abort':
             abort = True
 
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
