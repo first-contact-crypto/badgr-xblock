@@ -615,7 +615,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
     @XBlock.json_handler
-    def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argument
+    def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argumentff
         """  Returns the actual condition state  """
 
 
@@ -623,11 +623,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         abort = self.abort
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
         if abort == True:
-            return {'status':'False', 'abort': 'True'}
+            return {'status':'False', 'abort': 'True', 'check_earned': str(self.check_earned), 'received_award': str(self.received_award)}
         elif condition_status == True:
-            return {'status': 'True', 'abort': 'False'}
+            return {'status': 'True', 'abort': 'False', 'check_earned': str(self.check_earned), 'received_award': str(self.received_award)}
         elif condition_status == False:
-            return {'status': 'False', 'abort': 'False'}
+            return {'status': 'False', 'abort': 'False', 'check_earned': str(self.check_earned), 'received_award': str(self.received_award)}
 
 
 

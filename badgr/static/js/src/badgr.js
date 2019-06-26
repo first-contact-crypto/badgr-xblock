@@ -69,6 +69,7 @@ function BadgrXBlock(runtime, element, data) {
     var error_state = false;
     // var incomplete_state = false;
     var abort = null;
+    var mdata = null
 
     $.ajax({
       type: "POST",
@@ -78,6 +79,7 @@ function BadgrXBlock(runtime, element, data) {
       success: function(data) {
         console.log(
           "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " + data.abort);
+        mdata = data
         if (data.abort === "True") {
           abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
         } else {
@@ -110,7 +112,7 @@ function BadgrXBlock(runtime, element, data) {
       }
     }
 
-    if (abort === false && passed_test === true && error_state === false) {
+    if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
       $.ajax({
         type: "POST",
         url: handlerUrl,
@@ -123,7 +125,7 @@ function BadgrXBlock(runtime, element, data) {
           );
           window.location = onlyUrl;
           console.log("SUCCESS In getGrades.. (handlerUrl)");
-          return false;
+          // return false;
         },
         error: function(xhr, errmsg, err) {
           $(".badge-loader").hide();
@@ -148,7 +150,7 @@ function BadgrXBlock(runtime, element, data) {
         }
       });
     } else {
-      if (error_state === false && abort === false) {
+      if (error_state === false && abort === false && mdata.check_earned === 'False') {
         $.ajax({
           type: "POST",
           url: noAwardUrl,
