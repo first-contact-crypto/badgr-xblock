@@ -78,7 +78,7 @@ function BadgrXBlock(runtime, element, data) {
       // async: false,
       success: function(data) {
         console.log(
-          "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " + data.abort);
+          "SUCCESS In getGrades.. (conditionStatusHandlerURL) data is: " + JSON.stringify(data));
         mdata = data
         if (data.abort === "True") {
           abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
@@ -94,6 +94,10 @@ function BadgrXBlock(runtime, element, data) {
         else {
           passed_test = false;
         }
+
+        console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
+        
+
 
         if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
           $.ajax({
@@ -175,7 +179,7 @@ function BadgrXBlock(runtime, element, data) {
       }
     });
 
-    console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
+    // console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
 
     // while (abort === null) {
     //   sleep(500)
