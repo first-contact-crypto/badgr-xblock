@@ -623,9 +623,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         abort = self.abort
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
         if abort == True:
-            return {'status': '', 'abort': 'true'}
-        else:
-            return {'status': self.get_condition_status}
+            return {'status': False, 'abort': True}
+        elif condition_status == True:
+            return {'status': True, 'abort': False}
+        elif condition_status == False:
+            return {'status': False, 'abort': False}
 
 
 
@@ -696,10 +698,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         if self.SPECIAL_COMPARISON_DISPATCHER['has_null'](self, problems_to_answer) == False:
-            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(True))
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format("True"))
             self.abort = True
         else:
-            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(False))
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format("False"))
             self.abort = False
 
         
