@@ -699,10 +699,10 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
         if self.SPECIAL_COMPARISON_DISPATCHER['has_null'](self, problems_to_answer) == False:
             logger.info("INFO In condition_on_problem_list.. abort is: {}".format("True"))
-            self.abort = True
+            self.abort = False
         else:
             logger.info("INFO In condition_on_problem_list.. abort is: {}".format("False"))
-            self.abort = False
+            self.abort = True
 
         
         reducible_scores = map(_to_reducible, scores)
