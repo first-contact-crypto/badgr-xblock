@@ -113,6 +113,7 @@ function BadgrXBlock(runtime, element, data) {
       $.ajax({
         type: "POST",
         url: handlerUrl,
+        async: false,
         data: JSON.stringify({ name: "badgr" }),
         success: function(json) {
           // Just reload the page, the correct html with the badge will be displayed
@@ -151,6 +152,7 @@ function BadgrXBlock(runtime, element, data) {
         $.ajax({
           type: "POST",
           url: noAwardUrl,
+          async: false,
           data: JSON.stringify({ name: "badgr" }),
           success: function(json) {
             $(".badge-loader").hide();
