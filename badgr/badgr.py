@@ -406,10 +406,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
             logger.info("In get_condition_status.. the problems are: {}".format(problems))
             problems = filter(None, problems)
-            logger.info("NUMBER 2.. problems: {}".format(self.list_of_problems))
+            logger.info("NUMBER 2.. problems: {}".format(problems))
 
 
         else:
+            logger.info("In get_condition_status.. I SHOULD NOT BE HERE... SHOULD I?)
             condition_reached = None
         if type(problems[0]) == type([]):
             problems = problems[0]
@@ -456,7 +457,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 result = percentage < self.pass_mark
             if self.operator == 'gt':
                 result = percentage > self.pass_mark
-        logger.info("In compare_scores.. the result is: {}".format(result))
+        logger.info("In compare_scores.. the result is: {} the percentage is: {}".format(result, percentage))
         return result
 
     def are_all_not_null(self, problems_to_answer):

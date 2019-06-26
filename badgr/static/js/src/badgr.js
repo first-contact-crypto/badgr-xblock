@@ -85,6 +85,7 @@ function BadgrXBlock(runtime, element, data) {
         } else {
           $("#lean_overlay").show();
           $(".badge-loader").show();
+          incomplete_state = true 
           abort = false;
         }
         passed_test = data.status;
@@ -99,11 +100,8 @@ function BadgrXBlock(runtime, element, data) {
         abort = false;
       }
     });
-    while (abort === null) {
-      sleep(500);
-    }
-    if (!abort) {
-      while (abort === false && passed_test === null) {
+    if (abort === null) {
+      while (abort === null && passed_test === null) {
         sleep(500);
       }
     }
