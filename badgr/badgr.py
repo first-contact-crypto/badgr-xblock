@@ -378,7 +378,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         num_problems = 0
         # hack to initialize condition and operator variables
         self.list_of_problems
-        self.operator = "gte" 
+        self.operator = "gte"
+        
         if self.problem_id and self.condition == 'single_problem':
             
             # now split problem id by spaces or commas
@@ -619,12 +620,13 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         condition_status = self.get_condition_status()
-        abort = False 
-        if condition_status == 'abort':
-            abort = True
-
+        abort = self.abort
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
-        return {'status': condition_status, 'abort': abort }
+        if abort == True:
+            return {'status': '', 'abort': 'true'}
+        else:
+            return {'status': self.get_condition_status}
+
 
 
     def get_course_problems_usage_key_list(self):
@@ -687,11 +689,20 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         scores = filter(None, scores)
         problems_to_answer = [score.total for score in scores]
 
-        if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
-            evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](self, problems_to_answer)
-            logger.info("WTF: In condition_on_problem_list.. the evaluation is: {}".format(evaluation))
+        # if self.operator in self.SPECIAL_COMPARISON_DISPATCHER.keys():
+        #     evaluation = self.SPECIAL_COMPARISON_DISPATCHER[self.operator](self, problems_to_answer)
+        #     logger.info("WTF: In condition_on_problem_list.. the evaluation is: {}".format(evaluation))
+        #     return evaluation
 
-            return evaluation
+
+        if self.SPECIAL_COMPARISON_DISPATCHER['has_null'](self, problems_to_answer) == False:
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(True)
+            self.abort = True
+        else:
+            logger.info("INFO In condition_on_problem_list.. abort is: {}".format(False)
+            self.abort = False
+
+        
         reducible_scores = map(_to_reducible, scores)
         correct = reduce(_calculate_correct, reducible_scores, correct_neutral)
         total = reduce(_calculate_total, reducible_scores, total_neutral)
