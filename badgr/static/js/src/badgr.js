@@ -106,11 +106,8 @@ function BadgrXBlock(runtime, element, data) {
         abort = false;
       }
     });
-    if (abort === null) {
-      while (abort === null && passed_test === null) {
-        sleep(500);
-      }
-    }
+
+    console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
 
     if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
       $.ajax({
