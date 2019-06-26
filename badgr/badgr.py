@@ -429,7 +429,8 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             condition_reached = self.condition_on_problem_list(problems)
 
 
-        logger.info("INFO In get_condition_status.. self.condition is: {} and len(problems) is {}".format(self.condition, len(problems)))
+        logger.info("INFO In get_condition_status.. self.condition is: {} and len(problems) is {} and num_problems is: {}"
+                .format(self.condition, len(problems), num_problems))
         if len(problems) < num_problems:
             condition_reached = None 
 
@@ -617,8 +618,12 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
 
 
         condition_status = self.get_condition_status()
-        logger.info("INFO In condition_status_handler.. the condition_status returned is: {}".format(condition_status))
-        return {'status': condition_status }
+        abort = None 
+        if condition_status == None:
+            abort = True
+
+        logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
+        return {'status': condition_status, 'abort': abort }
 
 
     def get_course_problems_usage_key_list(self):
