@@ -618,11 +618,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
         logger.info("In condition_status_handler..")
 
         if self.quizzes_complete == False:
-            condtion_status = None 
+            condition_status = None 
         else:
-            condtion_status = self.get_condition_status()
-
-        return {'status': condtion_status }
+            condition_status = self.get_condition_status()
+        logger.info("INFO In condition_status_handler.. the condition_status returned is: {}".format(condition_status))
+        return {'status': condition_status }
 
 
     def get_course_problems_usage_key_list(self):
