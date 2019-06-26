@@ -77,7 +77,7 @@ function BadgrXBlock(runtime, element, data) {
       async: false,
       success: function(data) {
         console.log(
-          "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " data.abort);
+          "SUCCESS In getGrades.. (conditionStatusHandlerURL) data.status is: " + data.status + "abort is: " + data.abort);
         if (data.abort === true) {
           abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
         } else {
