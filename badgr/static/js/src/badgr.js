@@ -76,11 +76,11 @@ function BadgrXBlock(runtime, element, data) {
       url: conditionStatusHandlerURL,
       data: JSON.stringify({ blah: "blah" }),
       // async: false,
-      success: function(data) {
+      success: function(result, status, xhr) {
         console.log(
-          "SUCCESS In getGrades.. (conditionStatusHandlerURL) data is: " + JSON.stringify(data));
-        mdata = data
-        if (data.abort === "True") {
+          "SUCCESS In getGrades.. (conditionStatusHandlerURL) status: " + status + "result is: " + JSON.stringify(result));
+        mdata = result
+        if (result.abort === "True") {
           abort = true; // the user did not answer the question, so don't let 'em in... good bye sucker, the button stays disabled and nothing happens
         } else {
           $("#lean_overlay").show();
@@ -88,7 +88,7 @@ function BadgrXBlock(runtime, element, data) {
           // incomplete_state = true 
           abort = false;
         }
-        if (data.status === "True") {
+        if (result.status === "True") {
           passed_test = true
         }
         else {
@@ -97,8 +97,6 @@ function BadgrXBlock(runtime, element, data) {
 
         console.log("INFO In getGrades.. abort = " + JSON.stringify(abort))
         
-
-
         if (abort === false && passed_test === true && error_state === false && mdata.check_earned === 'False') {
           $.ajax({
             type: "POST",
