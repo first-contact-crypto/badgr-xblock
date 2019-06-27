@@ -384,10 +384,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             
             # now split problem id by spaces or commas
             problems = re.split('\s*,*|\s*,\s*', self.problem_id)
-            num_problems = len(problems)
+            
             problems = filter(None, problems)
 
             problems = problems[:1]
+            num_problems = len(problems)
             logger.info("NUMBER 1 .. problems: {}".format(problems))
 
         elif self.list_of_problems and self.condition == 'average_problems':
