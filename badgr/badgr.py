@@ -400,32 +400,31 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             np = []
             # [np.append(p) for p in problems if p != "" and p != u'' and p != [u'']]
             for p in problems:
+                if type(p[0]) == type([]):
+                    p = p[0]
                 if p != '' and p != u'' and p != [u'']:
                     logger.info("In get_condition_status.. keeping: {}".format(p))
                     np.append(p)
             problems = np
-            
-            logger.info("In get_condition_status.. the problems are: {}".format(problems))
             problems = filter(None, problems)
-            logger.info("NUMBER 2.. problems: {}".format(problems))
             num_problems = len(problems)
-
+            logger.info("NUMBER 2.. problems: {}".format(problems))
 
         else:
             logger.info("In get_condition_status.. I SHOULD NOT BE HERE... SHOULD I?")
             condition_reached = None
-        if type(problems[0]) == type([]):
-            problems = problems[0]
+        # if type(problems[0]) == type([]):
+        #     problems = problems[0]
 
-        ret = []
-        for p in problems:
-            if p != "" and p != u'' and p != [u'']:
-                logger.info("In get_condition_status.. keeping: {}".format(p))
-                ret.append(p)
-            else:
-                logger.info("In get_condition_status.. discarding from problems list: {}".format(p))
+        # ret = []
+        # for p in problems:
+        #     if p != "" and p != u'' and p != [u'']:
+        #         logger.info("In get_condition_status.. keeping: {}".format(p))
+        #         ret.append(p)
+        #     else:
+        #         logger.info("In get_condition_status.. discarding from problems list: {}".format(p))
 
-        problems = ret
+        # problems = ret
 
         if problems:
             logger.info("In get_condition_status.. problems (final): {}".format(problems))
