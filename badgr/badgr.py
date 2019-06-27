@@ -396,7 +396,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
             # now split list of problems id by spaces or commas
             problems = [re.split('\s*,*|\s*,\s*', x) for x in self.list_of_problems]
 
-            num_problems = len(problems)
+            
             np = []
             # [np.append(p) for p in problems if p != "" and p != u'' and p != [u'']]
             for p in problems:
@@ -404,10 +404,11 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                     logger.info("In get_condition_status.. keeping: {}".format(p))
                     np.append(p)
             problems = np
-
+            
             logger.info("In get_condition_status.. the problems are: {}".format(problems))
             problems = filter(None, problems)
             logger.info("NUMBER 2.. problems: {}".format(problems))
+            num_problems = len(problems)
 
 
         else:
