@@ -434,7 +434,7 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
                 .format(self.condition, len(problems), num_problems))
         if len(problems) < num_problems:
             logger.info("In get_condition_status.. ABORT ABORT ABORT! len(problems): {} num_problems: {}".format(len(problems), num_problems))
-            condition_reached = "abort"
+            self.abort = True
 
         logger.info("In get_condition_status.. the condition_reached is: {}".format(condition_reached))
         return condition_reached
@@ -617,8 +617,6 @@ class BadgrXBlock(StudioEditableXBlockMixin, XBlockWithSettingsMixin, XBlock):
     @XBlock.json_handler
     def condition_status_handler(self, data, suffix=''):  # pylint: disable=unused-argumentff
         """  Returns the actual condition state  """
-
-
         condition_status = self.get_condition_status()
         abort = self.abort
         logger.info("INFO In condition_status_handler.. the condition_status returned is: {} abort is: {}".format(condition_status, abort))
